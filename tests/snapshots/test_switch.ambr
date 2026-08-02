@@ -199,7 +199,7 @@
     'last_changed': <ANY>,
     'last_reported': <ANY>,
     'last_updated': <ANY>,
-    'state': 'on',
+    'state': 'off',
   })
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_heating_curve_2_enabled-entry]
@@ -335,8 +335,8 @@
     'previous_unique_id': None,
     'suggested_object_id': None,
     'supported_features': 0,
-    'translation_key': '815',
-    'unique_id': 'test_entry_xtherma-815',
+    'translation_key': '808',
+    'unique_id': 'test_entry_xtherma-808',
     'unit_of_measurement': None,
   })
 # ---
@@ -344,7 +344,7 @@
   StateSnapshot({
     'attributes': ReadOnlyDict({
       'friendly_name': 'test_entry_xtherma_modbus_config §14a EnWG request',
-      'parameter': '815',
+      'parameter': '808',
     }),
     'context': <ANY>,
     'entity_id': 'switch.test_entry_xtherma_modbus_config_ss14a_enwg_request',
@@ -703,56 +703,6 @@
     }),
     'context': <ANY>,
     'entity_id': 'switch.test_entry_xtherma_config_hot_water_now',
-    'last_changed': <ANY>,
-    'last_reported': <ANY>,
-    'last_updated': <ANY>,
-    'state': 'off',
-  })
-# ---
-# name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_ss14a_enwg_request-entry]
-  EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
-    'area_id': None,
-    'capabilities': None,
-    'config_entry_id': <ANY>,
-    'config_subentry_id': <ANY>,
-    'device_class': None,
-    'device_id': <ANY>,
-    'disabled_by': None,
-    'domain': 'switch',
-    'entity_category': None,
-    'entity_id': 'switch.test_entry_xtherma_config_ss14a_enwg_request',
-    'has_entity_name': True,
-    'hidden_by': None,
-    'icon': None,
-    'id': <ANY>,
-    'labels': set({
-    }),
-    'name': None,
-    'object_id_base': '§14a EnWG request',
-    'options': dict({
-    }),
-    'original_device_class': None,
-    'original_icon': None,
-    'original_name': '§14a EnWG request',
-    'platform': 'xtherma_fp',
-    'previous_unique_id': None,
-    'suggested_object_id': None,
-    'supported_features': 0,
-    'translation_key': '815',
-    'unique_id': 'test_entry_xtherma-815',
-    'unit_of_measurement': None,
-  })
-# ---
-# name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_ss14a_enwg_request-state]
-  StateSnapshot({
-    'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config §14a EnWG request',
-      'parameter': '815',
-    }),
-    'context': <ANY>,
-    'entity_id': 'switch.test_entry_xtherma_config_ss14a_enwg_request',
     'last_changed': <ANY>,
     'last_reported': <ANY>,
     'last_updated': <ANY>,
