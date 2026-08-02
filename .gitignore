@@ -21,3 +21,9 @@ config/*
 
 # keep configuration
 !config/configuration.yaml
+
+# local settings
+.env
+
+# ignore downloaded json
+tests/fixtures/temp.json
