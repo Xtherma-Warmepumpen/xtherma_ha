@@ -4,7 +4,10 @@ import pytest
 from homeassistant.helpers.entity import EntityDescription
 from pytest_homeassistant_custom_component.common import load_json_value_fixture
 
-from custom_components.xtherma_fp.const import KEY_ENTRY_INPUT_FACTOR, KEY_ENTRY_KEY
+from custom_components.xtherma_fp.const import (
+    KEY_ENTRY_INPUT_FACTOR,
+    KEY_ENTRY_KEY,
+)
 from custom_components.xtherma_fp.entity_descriptors import (
     MODBUS_ENTITY_DESCRIPTIONS,
     XtNumericEntityDescription,
@@ -22,18 +25,18 @@ def test_json_load_value_fixture():
     assert data.get("serial_number") == "FP-04-123456"
     settings = data.get("settings")
     assert isinstance(settings, list)
-    assert len(settings) == 34
+    assert len(settings) == 36
     telemetry = data.get("telemetry")
     assert isinstance(telemetry, list)
-    assert len(telemetry) == 54
+    assert len(telemetry) == 55
     t0 = telemetry[0]
     assert isinstance(t0, dict)
     assert t0.get("key") == "tvl"
-    assert t0.get("input_factor") == "/10"
+    assert t0.get("output_factor") == "/10"
     tlast = telemetry[53]
     assert isinstance(tlast, dict)
     assert tlast.get("key") == "mode"
-    assert tlast.get("value") == "3"
+    assert tlast.get("value") == 3
 
 
 def test_input_factors():
