@@ -129,6 +129,7 @@ def provide_modbus_data(
     set_modbus_register(regs_list, "out_total", 0)
     set_modbus_register(regs_list, "x2400", 1)
     set_modbus_register(regs_list, "x2401", 1234)
+    set_modbus_register(regs_list, "error", 1)
 
     return param
 

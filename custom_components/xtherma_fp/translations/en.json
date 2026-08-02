@@ -98,6 +98,12 @@
       "error": {
         "name": "System ok"
       },
+      "error_2": {
+        "name": "System ok"
+      },
+      "error_1": {
+        "name": "System fault"
+      },
       "14a": {
         "name": "§14a EnWG state"
       },

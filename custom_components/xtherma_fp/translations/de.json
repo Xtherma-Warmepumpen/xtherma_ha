@@ -98,6 +98,12 @@
       "error": {
         "name": "Anlage ungestört"
       },
+      "error_2": {
+        "name": "Anlage ungestört"
+      },
+      "error_1": {
+        "name": "Anlagenfehler"
+      },
       "14a": {
         "name": "§14a EnWG Status"
       },

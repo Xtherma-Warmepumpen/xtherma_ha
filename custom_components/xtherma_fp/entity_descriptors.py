@@ -109,6 +109,12 @@ def _error_icon(state: bool | None) -> str:
     return "mdi:alert"
 
 
+def _error_1_icon(state: bool | None) -> str:
+    if state:
+        return "mdi:alert"
+    return "mdi:check"
+
+
 _mode_options = ["standby", "heating", "cooling", "water", "auto"]
 _mode_icon_map = {
     0: "mdi:power-standby",
@@ -938,6 +944,16 @@ _sensor_error = XtBinarySensorEntityDescription(
     device_class=BinarySensorDeviceClass.RUNNING,
     icon_provider=_error_icon,
 )
+_sensor_error_2 = XtBinarySensorEntityDescription(
+    key="error_2",
+    device_class=BinarySensorDeviceClass.RUNNING,
+    icon_provider=_error_icon,
+)
+_sensor_error_1 = XtBinarySensorEntityDescription(
+    key="error_1",
+    device_class=BinarySensorDeviceClass.PROBLEM,
+    icon_provider=_error_1_icon,
+)
 _sensor_sg = XtSensorEntityDescription(
     key="sg",
     device_class=SensorDeviceClass.ENUM,
@@ -1255,7 +1271,8 @@ ENTITY_DESCRIPTIONS: list[EntityDescription] = [
     # ------- general
     _sensor_controller_v,
     _sensor_mode,
-    _sensor_error,
+    _sensor_error_2,
+    _sensor_error_1,
     _sensor_14a,
     _sensor_sg,
     _sensor_evu,
