@@ -293,7 +293,7 @@
       "450": {
         "name": "Kühlkurve 2 aktiviert"
       },
-      "815": {
+      "808": {
         "name": "§14a EnWG Anforderung"
       },
       "x2400": {
@@ -391,7 +391,7 @@
           "auto": "Automatikbetrieb"
         }
       },
-      "808": {
+      "815": {
         "name": "SG-Ready Anforderung",
         "state": {
           "off": "Nicht aktiviert",

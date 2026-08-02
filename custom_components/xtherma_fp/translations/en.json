@@ -293,7 +293,7 @@
       "450": {
         "name": "Cooling curve 2 active"
       },
-      "815": {
+      "808": {
         "name": "§14a EnWG request"
       },
       "x2400": {
@@ -391,7 +391,7 @@
           "auto": "automatic"
         }
       },
-      "808": {
+      "815": {
         "name": "SG-Ready request",
         "state": {
           "off": "not active",
