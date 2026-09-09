@@ -12,13 +12,12 @@ from homeassistant.helpers.entity import EntityDescription
 from .const import (
     FERNPORTAL_RATE_LIMIT_S,
     FERNPORTAL_TIMEOUT_S,
-    KEY_ENTRY_INPUT_FACTOR,
     KEY_ENTRY_KEY,
     KEY_ENTRY_VALUE,
     KEY_SETTINGS,
     KEY_TELEMETRY,
 )
-from .entity_descriptors import ENTITY_DESCRIPTIONS
+from .entity_descriptors import ENTITY_DESCRIPTIONS, XtNumericEntityDescription
 from .xtherma_client_common import (
     XthermaClient,
     XthermaError,
@@ -45,6 +44,10 @@ class XthermaClientRest(XthermaClient):
         self._url = f"{url}/{serial_number}"
         self._api_key = api_key
         self._session = session
+        self._factors: dict[str, str] = {}
+        for desc in ENTITY_DESCRIPTIONS:
+            if isinstance(desc, XtNumericEntityDescription) and desc.factor:
+                self._factors[desc.key] = desc.factor
 
     def update_interval(self) -> timedelta:
         """Return update interval for data coordinator."""
@@ -81,15 +84,16 @@ class XthermaClientRest(XthermaClient):
                     if (raw_value := entry.get(KEY_ENTRY_VALUE)) is None:
                         continue
                     value = int(raw_value)
-                    if (input_factor := entry.get(KEY_ENTRY_INPUT_FACTOR)) is not None:
-                        value = self._apply_input_factor(value, input_factor)
+                    factor = self._factors.get(key)
+                    if factor:
+                        value = self._apply_input_factor(value, factor)
                     result[key] = value
                     _LOGGER.debug(
-                        'key="%s" raw="%s" value="%s" inputfactor="%s"',
+                        'key="%s" raw="%s" value="%s" factor="%s"',
                         key,
                         raw_value,
                         value,
-                        input_factor,
+                        factor,
                     )
                 return result
         except aiohttp.ClientResponseError as err:
