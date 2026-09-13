@@ -3,7 +3,7 @@ from pathlib import Path
 
 # Update python.analysis.extraPaths in .vscode/settings.json if you change this.
 # If changed, make sure subclasses in modbus_client are still valid!
-sys.path.insert(0, str((Path(__file__).parent / "pymodbus-3.11.3").absolute()))
+sys.path.insert(0, str((Path(__file__).parent / "pymodbus-3.13.0").absolute()))
 
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
