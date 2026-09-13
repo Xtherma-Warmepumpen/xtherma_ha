@@ -104,6 +104,22 @@ def set_modbus_register(param: MockModbusParam, key: str, value: int):
     pytest.fail(f"Key {key} not found in range?!")
 
 
+# convert a REST key to corresponding Modbus key
+# return None if there is no equivalent
+def rest_key_to_modbus_key(key: str) -> str | None:
+    if key == "error_2":
+        return "error"
+    if key == "hw_now":
+        return "003"
+    if key == "h1_active_curve":
+        return "310"
+    if key == "h2_active_curve":
+        return "410"
+    if key in ("error_1"):
+        return None
+    return key
+
+
 def provide_modbus_data(
     exc_code: MockModbusParamExceptionCode = None,
 ) -> list[MockModbusParam]:
@@ -121,14 +137,18 @@ def provide_modbus_data(
     all_values = flatten_mock_data(mock_data)
     for entry in all_values:
         key = entry[KEY_ENTRY_KEY]
-        value = int(str(entry[KEY_ENTRY_VALUE]))
+        key = rest_key_to_modbus_key(key)
+        if key is None:
+            continue
+        raw_value = entry[KEY_ENTRY_VALUE]
+        value = int(raw_value) if isinstance(raw_value, (int, str)) else 0
         set_modbus_register(regs_list, key, value)
 
     # The rest data does not define these values
-    set_modbus_register(regs_list, "in_total", 0)
     set_modbus_register(regs_list, "out_total", 0)
     set_modbus_register(regs_list, "x2400", 1)
     set_modbus_register(regs_list, "x2401", 1234)
+    set_modbus_register(regs_list, "error", 1)
 
     return param
 

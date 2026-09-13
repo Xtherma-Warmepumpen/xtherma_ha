@@ -669,6 +669,58 @@
     'state': 'off',
   })
 # ---
+# name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_system_fault-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': set({
+    }),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.test_entry_xtherma_config_system_fault',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'System fault',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.PROBLEM: 'problem'>,
+    'original_icon': 'mdi:check',
+    'original_name': 'System fault',
+    'platform': 'xtherma_fp',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'error_1',
+    'unique_id': 'test_entry_xtherma-error_1',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_system_fault-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      'device_class': 'problem',
+      'friendly_name': 'test_entry_xtherma_config System fault',
+      'icon': 'mdi:check',
+      'parameter': 'error_1',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.test_entry_xtherma_config_system_fault',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_system_ok-entry]
   EntityRegistryEntrySnapshot({
     'aliases': set({
@@ -700,8 +752,8 @@
     'previous_unique_id': None,
     'suggested_object_id': None,
     'supported_features': 0,
-    'translation_key': 'error',
-    'unique_id': 'test_entry_xtherma-error',
+    'translation_key': 'error_2',
+    'unique_id': 'test_entry_xtherma-error_2',
     'unit_of_measurement': None,
   })
 # ---
@@ -711,7 +763,7 @@
       'device_class': 'running',
       'friendly_name': 'test_entry_xtherma_config System ok',
       'icon': 'mdi:check',
-      'parameter': 'error',
+      'parameter': 'error_2',
     }),
     'context': <ANY>,
     'entity_id': 'binary_sensor.test_entry_xtherma_config_system_ok',

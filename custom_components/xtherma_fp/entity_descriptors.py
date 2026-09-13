@@ -109,6 +109,12 @@ def _error_icon(state: bool | None) -> str:
     return "mdi:alert"
 
 
+def _error_1_icon(state: bool | None) -> str:
+    if state:
+        return "mdi:alert"
+    return "mdi:check"
+
+
 _mode_options = ["standby", "heating", "cooling", "water", "auto"]
 _mode_icon_map = {
     0: "mdi:power-standby",
@@ -192,8 +198,8 @@ def _sgready_icon(state: StateType | date | datetime | Decimal) -> str:
     return "mdi:cogs"
 
 
-_808_options = ["off", "normal", "block", "raise"]
-_808_icon_map = {
+_815_options = ["off", "normal", "block", "raise"]
+_815_icon_map = {
     0: "mdi:cancel",  # "Kein Eingriff
     1: "mdi:circle",  # Normalbetrieb
     2: "mdi:circle-double",  # Sperre
@@ -201,11 +207,11 @@ _808_icon_map = {
 }
 
 
-def _808_icon(state: StateType) -> str:
+def _815_icon(state: StateType) -> str:
     if isinstance(state, str):
         try:
-            index = _808_options.index(state)
-            return _808_icon_map.get(index, "mdi:cogs")
+            index = _815_options.index(state)
+            return _815_icon_map.get(index, "mdi:cogs")
         except ValueError:
             pass
     return "mdi:cogs"
@@ -481,10 +487,10 @@ _sensor_522 = XtNumberEntityDescription(
     native_max_value=55,
     native_step=1,
 )
-_sensor_808 = XtSelectEntityDescription(
-    key="808",
-    options=_808_options,
-    icon_provider=_808_icon,
+_sensor_815 = XtSelectEntityDescription(
+    key="815",
+    options=_815_options,
+    icon_provider=_815_icon,
 )
 _sensor_811 = XtNumberEntityDescription(
     key="811",
@@ -519,8 +525,8 @@ _sensor_813 = XtNumberEntityDescription(
     native_step=1,
 )
 
-_sensor_815 = XtSwitchEntityDescription(
-    key="815",
+_sensor_808 = XtSwitchEntityDescription(
+    key="808",
 )
 
 _sensor_x2400 = XtSwitchEntityDescription(
@@ -938,6 +944,16 @@ _sensor_error = XtBinarySensorEntityDescription(
     device_class=BinarySensorDeviceClass.RUNNING,
     icon_provider=_error_icon,
 )
+_sensor_error_2 = XtBinarySensorEntityDescription(
+    key="error_2",
+    device_class=BinarySensorDeviceClass.RUNNING,
+    icon_provider=_error_icon,
+)
+_sensor_error_1 = XtBinarySensorEntityDescription(
+    key="error_1",
+    device_class=BinarySensorDeviceClass.PROBLEM,
+    icon_provider=_error_1_icon,
+)
 _sensor_sg = XtSensorEntityDescription(
     key="sg",
     device_class=SensorDeviceClass.ENUM,
@@ -1247,15 +1263,14 @@ ENTITY_DESCRIPTIONS: list[EntityDescription] = [
     _sensor_501,
     _sensor_522,
     # ------- network
-    _sensor_808,
     _sensor_811,
     _sensor_812,
     _sensor_813,
-    _sensor_815,
     # ------- general
     _sensor_controller_v,
     _sensor_mode,
-    _sensor_error,
+    _sensor_error_2,
+    _sensor_error_1,
     _sensor_14a,
     _sensor_sg,
     _sensor_evu,
