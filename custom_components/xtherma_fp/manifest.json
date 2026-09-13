@@ -10,5 +10,5 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Xtherma/xtherma_ha/issues",
   "quality_scale": "bronze",
-  "version": "1.3.9"
+  "version": "1.3.10"
 }
