@@ -19,9 +19,9 @@ async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: XthermaConfigEntry,
     async_add_entities: AddEntitiesCallback,
-) -> bool:
+) -> None:
     """HA calls this to initialize binary sensor platform."""
-    _LOGGER.debug("Setup switch platform")
+    _LOGGER.debug("Setup binary sensor platform")
     xtherma_data = config_entry.runtime_data
     coordinator = xtherma_data.coordinator
 
@@ -36,14 +36,13 @@ async def async_setup_entry(
 
     _LOGGER.debug("Created %d binary sensors", len(binary_sensors))
     async_add_entities(binary_sensors)
-    return True
 
 
 class XthermaBinarySensor(XthermaCoordinatorEntity, BinarySensorEntity):
     """Xtherma Binary Sensor."""
 
     # keep this for type safe access to custom members
-    xt_description: XtBinarySensorEntityDescription
+    entity_description: XtBinarySensorEntityDescription
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -57,6 +56,6 @@ class XthermaBinarySensor(XthermaCoordinatorEntity, BinarySensorEntity):
     @property
     def icon(self) -> str | None:
         """Return the icon to use in the frontend, if any."""
-        if self.xt_description.icon_provider:
-            return self.xt_description.icon_provider(self.is_on)
+        if self.entity_description.icon_provider:
+            return self.entity_description.icon_provider(self.is_on)
         return super().icon

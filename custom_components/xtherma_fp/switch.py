@@ -5,7 +5,6 @@ from typing import Any
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -21,7 +20,7 @@ async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: XthermaConfigEntry,
     async_add_entities: AddEntitiesCallback,
-) -> bool:
+) -> None:
     """HA calls this to initialize sensor platform."""
     _LOGGER.debug("Setup switch platform")
     xtherma_data = config_entry.runtime_data
@@ -38,14 +37,13 @@ async def async_setup_entry(
 
     _LOGGER.debug("Created %d switches", len(switches))
     async_add_entities(switches)
-    return True
 
 
 class XthermaSwitchEntity(XthermaCoordinatorEntity, SwitchEntity):
     """Xtherma Switch Input."""
 
     # keep this for type safe access to custom members
-    xt_description: XtSwitchEntityDescription
+    entity_description: XtSwitchEntityDescription
 
     def __init__(
         self,
@@ -77,30 +75,20 @@ class XthermaSwitchEntity(XthermaCoordinatorEntity, SwitchEntity):
     @property
     def icon(self) -> str | None:
         """Return the icon to use in the frontend, if any."""
-        if self.xt_description.icon_provider:
-            return self.xt_description.icon_provider(self.is_on)
+        if self.entity_description.icon_provider:
+            return self.entity_description.icon_provider(self.is_on)
         return super().icon
 
     async def async_turn_on(self, **kwargs: Any) -> None:  # noqa: ANN401
         """Turn the entity on."""
-        try:
+        with self._force_refresh_on_error():
             await self.coordinator.async_write(self, 1)
             self._attr_is_on = True
             self.async_write_ha_state()
-        except HomeAssistantError:
-            self._attr_force_update = True
-            self.async_write_ha_state()
-            self._attr_force_update = False
-            raise
 
     async def async_turn_off(self, **kwargs: Any) -> None:  # noqa: ANN401
         """Turn the entity off."""
-        try:
+        with self._force_refresh_on_error():
             await self.coordinator.async_write(self, 0)
             self._attr_is_on = False
             self.async_write_ha_state()
-        except Exception:
-            self._attr_force_update = True
-            self.async_write_ha_state()
-            self._attr_force_update = False
-            raise
