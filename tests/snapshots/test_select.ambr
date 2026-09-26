@@ -1,11 +1,12 @@
 # serializer version: 1
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][select.test_entry_xtherma_modbus_config_operating_mode-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': dict({
-      'options': list([
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
         'standby',
         'heating',
         'cooling',
@@ -46,9 +47,9 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][select.test_entry_xtherma_modbus_config_operating_mode-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Operating mode',
-      'icon': 'mdi:brightness-auto',
-      'options': list([
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Operating mode',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:brightness-auto',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
         'standby',
         'heating',
         'cooling',
@@ -67,11 +68,12 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][select.test_entry_xtherma_modbus_config_sg_ready_request-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': dict({
-      'options': list([
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
         'off',
         'normal',
         'block',
@@ -111,9 +113,9 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][select.test_entry_xtherma_modbus_config_sg_ready_request-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config SG-Ready request',
-      'icon': 'mdi:cancel',
-      'options': list([
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config SG-Ready request',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:cancel',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
         'off',
         'normal',
         'block',
@@ -131,11 +133,12 @@
 # ---
 # name: test_setup_select_rest_api[mock_rest_api_client0][select.test_entry_xtherma_config_operating_mode-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': dict({
-      'options': list([
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
         'standby',
         'heating',
         'cooling',
@@ -176,9 +179,9 @@
 # name: test_setup_select_rest_api[mock_rest_api_client0][select.test_entry_xtherma_config_operating_mode-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config Operating mode',
-      'icon': 'mdi:brightness-auto',
-      'options': list([
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Operating mode',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:brightness-auto',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
         'standby',
         'heating',
         'cooling',

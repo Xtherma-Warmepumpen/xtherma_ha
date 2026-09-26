@@ -19,10 +19,12 @@ from custom_components.xtherma_fp.const import (
     KEY_SETTINGS,
     KEY_TELEMETRY,
 )
-from custom_components.xtherma_fp.entity_descriptors import (
-    MODBUS_ENTITY_DESCRIPTIONS,
-    MODBUS_REGISTER_RANGES,
+from custom_components.xtherma_fp.pytherma.addresses import (
     MODBUS_REGISTER_SIZE,
+    REGISTER_RANGES,
+)
+from custom_components.xtherma_fp.pytherma.bindings import (
+    MODBUS_BINDING_BY_KEY,
 )
 from tests.conftest import (
     MockModbusParam,
@@ -80,27 +82,27 @@ def provide_rest_data(
 
 
 def get_modbus_register_number(key: str) -> int:
-    for reg_desc in MODBUS_ENTITY_DESCRIPTIONS:
-        for i, desc in enumerate(reg_desc.descriptors):
-            if desc is None:
-                continue
-            if desc.key == key:
-                return reg_desc.base + i
-    pytest.fail(f"Unknown key {key}")
+    binding = MODBUS_BINDING_BY_KEY.get(key)
+    if binding is None:
+        pytest.fail(f"Unknown key {key}")
+    return binding.address
 
 
 def set_modbus_register(param: MockModbusParam, key: str, value: int):
-    regno = get_modbus_register_number(key)
+    binding = MODBUS_BINDING_BY_KEY.get(key)
+    if binding is None:
+        pytest.fail(f"Unknown key {key}")
+    regno = binding.address
     # find corresponding register range and modify value
-    for i, r in enumerate(MODBUS_REGISTER_RANGES):
-        if regno >= r.first_reg and regno <= r.last_reg:
+    for i, r in enumerate(REGISTER_RANGES):
+        if r.first_reg <= regno <= r.last_reg:
             offset = regno - r.first_reg
             reg_list: MockModbusParamReadResult = param[i]
             regs = cast("MockModbusParamRegisters", reg_list["registers"])
             regs[offset] = value
             return
     # cannot happen, test_modbus_register_range_coverage verifies
-    # all registers are covered by MODBUS_REGISTER_RANGES
+    # all registers are covered by REGISTER_RANGES
     pytest.fail(f"Key {key} not found in range?!")
 
 
@@ -162,7 +164,7 @@ def provide_empty_modbus_data(
 
     # prepare respsonses for read_holding_registers()
     regs_list: MockModbusParam = []
-    for r in MODBUS_REGISTER_RANGES:
+    for r in REGISTER_RANGES:
         regs_list.append(
             {
                 "registers": raw_registers[r.first_reg : r.last_reg + 1],

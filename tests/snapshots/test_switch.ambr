@@ -1,8 +1,9 @@
 # serializer version: 1
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_cooling_curve_1_active-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -38,8 +39,8 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_cooling_curve_1_active-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Cooling curve 1 active',
-      'icon': 'mdi:snowflake',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Cooling curve 1 active',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:snowflake',
       'parameter': '350',
     }),
     'context': <ANY>,
@@ -52,8 +53,9 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_cooling_curve_2_active-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -89,8 +91,8 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_cooling_curve_2_active-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Cooling curve 2 active',
-      'icon': 'mdi:snowflake',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Cooling curve 2 active',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:snowflake',
       'parameter': '450',
     }),
     'context': <ANY>,
@@ -103,8 +105,9 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_heat_pump_turned_on-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -140,7 +143,7 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_heat_pump_turned_on-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Heat pump turned on',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Heat pump turned on',
       'parameter': '001',
     }),
     'context': <ANY>,
@@ -153,8 +156,9 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_heating_curve_1_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -190,8 +194,8 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_heating_curve_1_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Heating curve 1 enabled',
-      'icon': 'mdi:heating-coil',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Heating curve 1 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:heating-coil',
       'parameter': '310',
     }),
     'context': <ANY>,
@@ -204,8 +208,9 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_heating_curve_2_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -241,8 +246,8 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_heating_curve_2_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Heating curve 2 enabled',
-      'icon': 'mdi:heating-coil',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Heating curve 2 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:heating-coil',
       'parameter': '410',
     }),
     'context': <ANY>,
@@ -255,8 +260,9 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_hot_water_now-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -292,8 +298,8 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_hot_water_now-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Hot water now',
-      'icon': 'mdi:water-boiler',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Hot water now',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:water-boiler',
       'parameter': '003',
     }),
     'context': <ANY>,
@@ -306,8 +312,9 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_ss14a_enwg_request-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -343,7 +350,7 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_ss14a_enwg_request-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config §14a EnWG request',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config §14a EnWG request',
       'parameter': '808',
     }),
     'context': <ANY>,
@@ -356,8 +363,9 @@
 # ---
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_surplus_managment_enable-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -393,7 +401,7 @@
 # name: test_setup_select_modbus_tcp[mock_modbus_tcp_client0][switch.test_entry_xtherma_modbus_config_surplus_managment_enable-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config Surplus managment enable',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config Surplus managment enable',
       'parameter': 'x2400',
     }),
     'context': <ANY>,
@@ -406,8 +414,9 @@
 # ---
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_cooling_curve_1_active-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -443,8 +452,8 @@
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_cooling_curve_1_active-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config Cooling curve 1 active',
-      'icon': 'mdi:snowflake',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Cooling curve 1 active',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:snowflake',
       'parameter': '350',
     }),
     'context': <ANY>,
@@ -457,8 +466,9 @@
 # ---
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_cooling_curve_2_active-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -494,8 +504,8 @@
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_cooling_curve_2_active-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config Cooling curve 2 active',
-      'icon': 'mdi:snowflake',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Cooling curve 2 active',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:snowflake',
       'parameter': '450',
     }),
     'context': <ANY>,
@@ -508,8 +518,9 @@
 # ---
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_heat_pump_turned_on-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -545,7 +556,7 @@
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_heat_pump_turned_on-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config Heat pump turned on',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Heat pump turned on',
       'parameter': '001',
     }),
     'context': <ANY>,
@@ -558,8 +569,9 @@
 # ---
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_heating_curve_1_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -595,8 +607,8 @@
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_heating_curve_1_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config Heating curve 1 enabled',
-      'icon': 'mdi:heating-coil',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Heating curve 1 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:heating-coil',
       'parameter': '310',
     }),
     'context': <ANY>,
@@ -609,8 +621,9 @@
 # ---
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_heating_curve_2_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -646,8 +659,8 @@
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_heating_curve_2_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config Heating curve 2 enabled',
-      'icon': 'mdi:heating-coil',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Heating curve 2 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:heating-coil',
       'parameter': '410',
     }),
     'context': <ANY>,
@@ -660,8 +673,9 @@
 # ---
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_hot_water_now-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -697,8 +711,8 @@
 # name: test_setup_switch_rest_api[mock_rest_api_client0][switch.test_entry_xtherma_config_hot_water_now-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config Hot water now',
-      'icon': 'mdi:water-boiler',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Hot water now',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:water-boiler',
       'parameter': '003',
     }),
     'context': <ANY>,

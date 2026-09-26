@@ -1,6 +1,7 @@
 """Test config flow."""
 
 import asyncio
+from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, cast
 from unittest.mock import patch
 
@@ -32,9 +33,13 @@ from custom_components.xtherma_fp.const import (
     CONF_SERIAL_NUMBER,
     FERNPORTAL_URL,
 )
+from custom_components.xtherma_fp.pytherma.exceptions import (
+    XthermaNotConnectedError,
+)
+from custom_components.xtherma_fp.pytherma.testing import FakeUnit
 from custom_components.xtherma_fp.xtherma_client_common import (
     XthermaError,
-    XthermaNotConnectedError,
+    XthermaRestApiError,
     XthermaRestBusyError,
     XthermaTimeoutError,
 )
@@ -61,6 +66,21 @@ MOCK_MODBUS_DATA = {
     CONF_PORT: MOCK_MODBUS_PORT,
     CONF_ADDRESS: MOCK_MODBUS_ADDRESS,
 }
+
+
+@asynccontextmanager
+async def _temporary_unit_context(unit):
+    """Yield a prepared unit as a temporary unit."""
+    yield unit
+
+
+def _temporary_unit_factory(hass, params, address):
+    """Stand-in for the modbus component's temporary unit factory.
+
+    Yields a zero-image unit; the validation probe raises in the
+    patched ``XthermaClientModbus.connect`` before any data is read.
+    """
+    return _temporary_unit_context(FakeUnit())
 
 
 async def test_config_common_bad_arguments(hass):
@@ -158,7 +178,9 @@ async def test_rest_error_404(hass, aioclient_mock):
     )
     assert result["type"] is FlowResultType.FORM
     assert result["step_id"] == "rest_api"
-    assert result["errors"] == {"base": "unknown"}
+    # R-4: XthermaRestApiError derives from the unified XthermaError
+    # base, so a 404 maps to cannot_connect instead of unknown
+    assert result["errors"] == {"base": "cannot_connect"}
 
 
 async def test_rest_error_429(hass, aioclient_mock):
@@ -345,7 +367,10 @@ async def test_step_reconfigure_rest_api_errors(hass, mock_rest_api_client):
 
 
 @pytest.mark.parametrize("mock_rest_api_client", provide_rest_data(), indirect=True)
-async def test_step_reconfigure_modbus(hass, mock_rest_api_client):
+@pytest.mark.parametrize("mock_modbus_tcp_client", provide_modbus_data(), indirect=True)
+async def test_step_reconfigure_modbus(
+    hass, mock_rest_api_client, mock_modbus_tcp_client
+):
     """Test for reconfiguring to modbus."""
     entry = await init_integration(hass, mock_rest_api_client)
     assert entry.state is ConfigEntryState.LOADED
@@ -364,8 +389,15 @@ async def test_step_reconfigure_modbus(hass, mock_rest_api_client):
     )
     assert reconfigure_result["type"] is FlowResultType.FORM
 
-    with patch(
-        "custom_components.xtherma_fp.config_flow._validate_modbus_tcp", return_value={}
+    with (
+        patch(
+            "custom_components.xtherma_fp.config_flow._validate_modbus_tcp",
+            return_value={},
+        ),
+        patch(
+            "custom_components.xtherma_fp.xtherma_client_modbus.XthermaClientModbus.connect",
+            return_value=None,
+        ),
     ):
         reconfigure_result = await hass.config_entries.flow.async_configure(
             reconfigure_result["flow_id"],
@@ -446,6 +478,9 @@ async def test_validate_connection(data, expected_errors):
         (MOCK_REST_DATA, XthermaRestBusyError, {"base": "rate_limit"}),
         (MOCK_REST_DATA, XthermaTimeoutError, {"base": "timeout"}),
         (MOCK_REST_DATA, XthermaError, {"base": "cannot_connect"}),
+        # regression R-4: XthermaRestApiError derives from the unified
+        # XthermaError base, so 401 maps to cannot_connect, not unknown
+        (MOCK_REST_DATA, XthermaRestApiError(401), {"base": "cannot_connect"}),
         (MOCK_REST_DATA, Exception, {"base": "unknown"}),
     ],
 )
@@ -474,9 +509,15 @@ async def test_validate_rest_api(hass, data, side_effect, expected_errors):
 )
 async def test_validate_modbus_tcp(hass, data, side_effect, expected_errors):
     """Test for modbus connection validation."""
-    with patch(
-        "custom_components.xtherma_fp.xtherma_client_modbus.XthermaClientModbus.connect",
-        side_effect=side_effect,
+    with (
+        patch(
+            "custom_components.xtherma_fp.xtherma_client_modbus.XthermaClientModbus.connect",
+            side_effect=side_effect,
+        ),
+        patch(
+            "custom_components.xtherma_fp.config_flow.async_get_temporary_unit",
+            _temporary_unit_factory,
+        ),
     ):
         assert await _validate_modbus_tcp(hass, data) == expected_errors
 

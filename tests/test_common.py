@@ -10,7 +10,7 @@ from custom_components.xtherma_fp.const import (
     KEY_ENTRY_OUTPUT_FACTOR,
 )
 from custom_components.xtherma_fp.entity_descriptors import (
-    MODBUS_ENTITY_DESCRIPTIONS,
+    MODBUS_DESCRIPTORS,
     XtNumericEntityDescription,
 )
 from tests.helpers import (
@@ -43,19 +43,16 @@ def test_json_load_value_fixture():
 # disable this for now. Should we decide to use the factors embedded
 # in the REST API response, we can enable this
 @pytest.mark.skip(reason="Disabling test_input_factors")
-def test_input_factors():  # noqa: C901
+def test_input_factors():
     """Verify that input_factors in REST response match Modbus descriptors."""
     """Verify that input_factors in REST response match Modbus descriptors."""
     mock_data = load_mock_data("rest_response.json")
     flattened_mock_data = flatten_mock_data(mock_data)
 
     def find_desc_by_key(key: str) -> EntityDescription | None:
-        for reg_desc in MODBUS_ENTITY_DESCRIPTIONS:
-            for desc in reg_desc.descriptors:
-                if desc is None:
-                    continue
-                if desc.key == key:
-                    return desc
+        for desc in MODBUS_DESCRIPTORS:
+            if desc.key == key:
+                return desc
         pytest.fail(f"Unknown key {key}")
 
     for entry in flattened_mock_data:

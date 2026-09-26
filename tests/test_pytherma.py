@@ -9,11 +9,9 @@ from homeassistant.const import EVENT_STATE_CHANGED
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from custom_components.xtherma_fp.const import CONF_DETECT_EMPTY_MODBUS_DATA, DOMAIN
-from custom_components.xtherma_fp.entity_descriptors import (
-    MODBUS_ENTITY_DESCRIPTIONS,
-    MODBUS_REGISTER_RANGES,
-)
-from custom_components.xtherma_fp.vendor.pymodbus import ExcCodes
+from custom_components.xtherma_fp.entity_descriptors import MODBUS_DESCRIPTORS
+from custom_components.xtherma_fp.pytherma.addresses import REGISTER_RANGES
+from custom_components.xtherma_fp.pytherma.bindings import MODBUS_BINDING_BY_KEY
 from tests.conftest import MockModbusParam
 from tests.helpers import (
     get_modbus_register_number,
@@ -51,7 +49,7 @@ async def test_async_setup_entry_modbus_ok(hass, mock_modbus_tcp_client):
 
 @pytest.mark.parametrize(
     "mock_modbus_tcp_client",
-    provide_modbus_data(exc_code=ExcCodes.DEVICE_BUSY),
+    provide_modbus_data(exc_code=6),  # ExcCodes.DEVICE_BUSY
     indirect=True,
 )
 @pytest.mark.asyncio
@@ -69,7 +67,7 @@ def _test_modbus_runtime_read_busy() -> list[MockModbusParam]:
     param_setup: list[MockModbusParam] = provide_modbus_data()
     param_runtime: list[MockModbusParam] = provide_modbus_data()
     for regs in param_runtime[0]:
-        regs["exc_code"] = ExcCodes.DEVICE_BUSY
+        regs["exc_code"] = 6  # ExcCodes.DEVICE_BUSY
     return [param_setup[0] + param_runtime[0]]
 
 
@@ -273,44 +271,38 @@ def test_modbus_register_range_coverage():
     """Test modbus raw read ranges cover all defined registers."""
 
     def is_address_covered(address: int) -> bool:
-        return any(r.first_reg <= address <= r.last_reg for r in MODBUS_REGISTER_RANGES)
+        return any(r.first_reg <= address <= r.last_reg for r in REGISTER_RANGES)
 
-    for reg_desc in MODBUS_ENTITY_DESCRIPTIONS:
-        for i, _desc in enumerate(reg_desc.descriptors):
-            address = reg_desc.base + i
-            assert is_address_covered(address), (
-                f"Register {address} is not covered in MODBUS_REGISTER_RANGES"
-            )
-
-
-def test_modbus_register_descriptions_match_spec(snapshot):
-    """Test modbus register range matches specification."""
-    for reg_desc in MODBUS_ENTITY_DESCRIPTIONS:
-        assert snapshot(name=f"{reg_desc.base}") == reg_desc, (
-            f"Mismatch in descriptions for base {reg_desc.base}"
+    for desc in MODBUS_DESCRIPTORS:
+        address = MODBUS_BINDING_BY_KEY[desc.key].address
+        assert is_address_covered(address), (
+            f"Register {address} is not covered in REGISTER_RANGES"
         )
 
 
+def test_modbus_register_descriptions_match_spec(snapshot):
+    """Test modbus register descriptions match specification."""
+    assert snapshot(name="MODBUS_DESCRIPTORS") == MODBUS_DESCRIPTORS
+
+
 def test_modbus_register_ranges_cannot_be_empty():
-    """Verify that none of the MODBUS_REGISTER_RANGES can ever be empty."""
-    # check number of ranges so we know we'll have to modify this
-    # when MODBUS_REGISTER_RANGES changes
-    assert len(MODBUS_REGISTER_RANGES) == 2
+    """Verify that none of the REGISTER_RANGES can ever be empty."""
+    assert len(REGISTER_RANGES) == 2
 
     # check non-empty register in range #0
     regno = get_modbus_register_number("501")
-    assert MODBUS_REGISTER_RANGES[0].non_empty_reg == regno
+    assert REGISTER_RANGES[0].non_empty_reg == regno
     assert (
-        MODBUS_REGISTER_RANGES[0].first_reg
-        <= MODBUS_REGISTER_RANGES[0].non_empty_reg
-        <= MODBUS_REGISTER_RANGES[0].last_reg
+        REGISTER_RANGES[0].first_reg
+        <= REGISTER_RANGES[0].non_empty_reg
+        <= REGISTER_RANGES[0].last_reg
     )
 
     # check non-empty register in range #1
     regno = get_modbus_register_number("controller_v")
-    assert MODBUS_REGISTER_RANGES[1].non_empty_reg == regno
+    assert REGISTER_RANGES[1].non_empty_reg == regno
     assert (
-        MODBUS_REGISTER_RANGES[0].first_reg
-        <= MODBUS_REGISTER_RANGES[1].non_empty_reg
-        <= MODBUS_REGISTER_RANGES[1].last_reg
+        REGISTER_RANGES[1].first_reg
+        <= REGISTER_RANGES[1].non_empty_reg
+        <= REGISTER_RANGES[1].last_reg
     )

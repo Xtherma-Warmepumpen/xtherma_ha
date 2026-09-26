@@ -2,12 +2,17 @@
 
 import asyncio
 from typing import Any, cast
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import patch
 
 import pytest
 from homeassistant.const import CONF_ADDRESS, CONF_API_KEY, CONF_HOST, CONF_PORT
+from homeassistant.setup import async_setup_component
 from homeassistant.util.json import (
     JsonValueType,
+)
+from modbus_connection import (
+    ModbusProtocolError,
+    ServerDeviceBusyError,
 )
 from pytest_homeassistant_custom_component.common import (
     MockConfigEntry,
@@ -24,6 +29,11 @@ from custom_components.xtherma_fp.const import (
     FERNPORTAL_URL,
     VERSION,
 )
+from custom_components.xtherma_fp.pytherma.addresses import (
+    MODBUS_REGISTER_SIZE,
+    REGISTER_RANGES,
+)
+from custom_components.xtherma_fp.pytherma.testing import FakeUnit
 from tests.const import (
     MOCK_API_KEY,
     MOCK_CONFIG_ENTRY_ID,
@@ -43,6 +53,13 @@ def snapshot(snapshot: SnapshotAssertion) -> SnapshotAssertion:
 @pytest.fixture(autouse=True)
 def auto_enable_custom_integrations(enable_custom_integrations):
     return
+
+
+@pytest.fixture(autouse=True)
+async def setup_dependencies(hass):
+    """Automatically set up core dependencies like modbus for all tests."""
+    assert await async_setup_component(hass, "modbus", {"modbus": []})
+    await hass.async_block_till_done()
 
 
 type MockRestParamResponse = JsonValueType
@@ -131,75 +148,69 @@ type MockModbusParamReadResult = dict[
 # Type of parameter which mock_modbus_tcp_client expects
 type MockModbusParam = list[MockModbusParamReadResult]
 
-MODBUS_CLIENT_PATH = (
-    "custom_components.xtherma_fp.xtherma_client_modbus.AsyncModbusTcpClient"
-)
+# the modbus component's unit factory; a config flow probe uses
+# ``config_flow.async_get_temporary_unit`` (covered by patching the
+# ``XthermaClientModbus.connect`` boundary in the validation tests)
+# NOTE: patch the package module directly (``xtherma_fp.async_get_unit``);
+# the ``.__init__`` spelling resolves to a duplicate module object and the
+# patch would silently miss the integration's module
+MODBUS_CLIENT_PATH = "custom_components.xtherma_fp.async_get_unit"
 
 
 @pytest.fixture
 async def mock_modbus_tcp_client(request: pytest.FixtureRequest):
-    """Fixture patching AsyncModbusTcpClient to return prepared data.
+    """Fixture patching the Modbus transport unit to return prepared data.
 
     Used to test Modbus/TCP connection. The fixture requires a parameter of type MockModbusParam
     which allows to define the data to be delivered to the modbus client.
 
     MockModbusParam is a list of MockModbusParamReadResults. Each read result
-    correspondonds to one call to read_holding_registers() in the modbus client.
-    A result is a dict with the following keys:
+    corresponds to one call to read_holding_registers() in the modbus client
+    (results repeat in register-range order). A result is a dict with the
+    following keys:
     "registers" -> register data
     "exc_code" -> exception to be thrown to the client (optional)
+
+    The fixture builds an in-memory :class:`pytherma.testing.FakeUnit`
+    (vendored at ``custom_components.xtherma_fp.pytherma``)
+    from the parameter and patches the unit factory used by the client
+    (``custom_components.xtherma_fp.async_get_unit``).
     """
-    with patch(MODBUS_CLIENT_PATH) as mock_modbus_client:
-        # Configure the mock instance that will be returned when AsyncModbusTcpClient() is called.
-        # This `mock_client_instance` represents the actual client object created by your component.
-        mock_instance = mock_modbus_client.return_value
+    assert isinstance(request.param, list)
+    param = request.param
 
-        mock_connected_property = Mock(return_value=False)
-        type(mock_instance).connected = property(lambda self: mock_connected_property())
+    # Build a flat register image as a fallback; each read result is placed at
+    # the offset of the range it belongs to (last write wins).
+    image = [0] * MODBUS_REGISTER_SIZE
+    for i, read_result in enumerate(param):
+        assert isinstance(read_result, dict)
+        reg_list = read_result.get("registers")
+        if reg_list is None:
+            continue
+        reg_list = cast("MockModbusParamRegisters", reg_list)
+        first_reg = REGISTER_RANGES[i % len(REGISTER_RANGES)].first_reg
+        image[first_reg : first_reg + len(reg_list)] = reg_list
 
-        # When `connect` is called, it should change the `connected` property to True,
-        # and return True which will be the return value of connect()
-        def connect_side_effect():
-            mock_connected_property.return_value = True
-            return True
-
-        mock_instance.connect = AsyncMock(side_effect=connect_side_effect)
-
-        # Mock the `read_holding_registers` method.
-        mock_results_queue = []
-        assert isinstance(request.param, list)
-        for registers_for_this_call in request.param:
-            assert isinstance(registers_for_this_call, dict)
-            reg_list = registers_for_this_call.get("registers")
-            assert registers_for_this_call is not None
-            exc_code = registers_for_this_call.get("exc_code")
-            mock_read_holding_registers_result = AsyncMock()
-            mock_read_holding_registers_result.registers = reg_list
-            if exc_code is not None:
-                mock_read_holding_registers_result.isError = Mock(return_value=True)
-                mock_read_holding_registers_result.exception_code = exc_code
+    unit = FakeUnit(image=image)
+    # Script the per-call read results, in call order.
+    for read_result in param:
+        exc_code = read_result.get("exc_code")
+        reg_list = read_result.get("registers")
+        if exc_code is not None:
+            # exc_code carries the pymodbus ExcCodes value from the test data
+            if exc_code == 6:  # ExcCodes.DEVICE_BUSY
+                unit.queue_read_result(ServerDeviceBusyError())
             else:
-                mock_read_holding_registers_result.isError = Mock(return_value=False)
-                mock_read_holding_registers_result.exception_code = 0
-            mock_results_queue.append(mock_read_holding_registers_result)
-        mock_instance.read_holding_registers = AsyncMock(side_effect=mock_results_queue)
+                unit.queue_read_result(ModbusProtocolError())
+        else:
+            unit.queue_read_result(
+                cast("MockModbusParamRegisters", list(reg_list))
+                if reg_list is not None
+                else None
+            )
 
-        # When `close` is called, it should change the `connected` property back to False.
-        def close_side_effect():
-            mock_connected_property.return_value = False
-
-        # Mock the `write_registers` method
-        mock_write_register_result = AsyncMock()
-        mock_write_register_result.isError = Mock(return_value=False)
-        mock_write_register_result.exception_code = 0
-        mock_instance.write_register = AsyncMock(
-            return_value=mock_write_register_result
-        )
-
-        # Mock the `close` method, as it might be called during component teardown or error handling.
-        mock_instance.close = Mock(side_effect=close_side_effect)
-
-        yield mock_instance
+    with patch(MODBUS_CLIENT_PATH, return_value=unit):
+        yield unit
 
 
 async def init_modbus_integration(

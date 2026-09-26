@@ -13,8 +13,12 @@ from homeassistant.const import (
     Platform,
 )
 from homeassistant.exceptions import HomeAssistantError
+from modbus_connection import ModbusConnectionError
 from pytest_homeassistant_custom_component.common import snapshot_platform
 
+from custom_components.xtherma_fp.pytherma.exceptions import (
+    XthermaNotConnectedError,
+)
 from custom_components.xtherma_fp.xtherma_client_common import XthermaReadOnlyError
 from tests.helpers import provide_modbus_data, provide_rest_data
 
@@ -76,11 +80,11 @@ async def test_set_switch_modbus(hass, mock_modbus_tcp_client):
     )
 
     assert hass.states.get(SWITCH_ENTITY_ID_MODBUS_450).state == STATE_OFF
-    kwargs = mock_modbus_tcp_client.write_register.call_args.kwargs
+    unit_id, address, value = mock_modbus_tcp_client.write_calls[-1]
     # verify arguments passed to write_register()
-    assert kwargs["address"] == 40
-    assert kwargs["value"] == 0
-    assert kwargs["device_id"] == 1
+    assert address == 40
+    assert value == 0
+    assert unit_id == 1
 
     await hass.services.async_call(
         DOMAIN,
@@ -90,8 +94,27 @@ async def test_set_switch_modbus(hass, mock_modbus_tcp_client):
     )
 
     assert hass.states.get(SWITCH_ENTITY_ID_MODBUS_450).state == STATE_ON
-    kwargs = mock_modbus_tcp_client.write_register.call_args.kwargs
+    unit_id, address, value = mock_modbus_tcp_client.write_calls[-1]
     # verify arguments passed to write_register()
-    assert kwargs["address"] == 40
-    assert kwargs["value"] == 1
-    assert kwargs["device_id"] == 1
+    assert address == 40
+    assert value == 1
+    assert unit_id == 1
+
+
+@pytest.mark.parametrize("mock_modbus_tcp_client", provide_modbus_data(), indirect=True)
+async def test_set_switch_modbus_not_connected(hass, mock_modbus_tcp_client):
+    """Writing while the modbus link is down raises HomeAssistantError."""
+    await init_modbus_integration(hass, mock_modbus_tcp_client)
+
+    mock_modbus_tcp_client.queue_write_error(ModbusConnectionError())
+
+    with pytest.raises(HomeAssistantError) as exc_info:
+        await hass.services.async_call(
+            DOMAIN,
+            SERVICE_TURN_ON,
+            {ATTR_ENTITY_ID: SWITCH_ENTITY_ID_MODBUS_450},
+            blocking=True,
+        )
+
+    assert isinstance(exc_info.value.__cause__, XthermaNotConnectedError)
+    assert exc_info.value.translation_key == "modbus_write_not_connected_error"
