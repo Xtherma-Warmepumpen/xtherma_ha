@@ -8,6 +8,19 @@ from typing import TYPE_CHECKING
 
 import homeassistant.helpers.device_registry as dr
 import homeassistant.helpers.entity_registry as er
+
+try:
+    from homeassistant.components.modbus import async_get_unit
+except ImportError:
+    # Importing the modbus component transitively imports its Modbus
+    # backends (pymodbus / tmodbus), which Home Assistant only installs
+    # when the modbus integration is present. This integration does not
+    # depend on them (it also supports read-only REST), so the import is
+    # guarded: the unit factory is left as None and re-imported lazily
+    # in async_setup_entry when a Modbus entry is set up.
+    async_get_unit = None
+
+from homeassistant.config_entries import ConfigEntryNotReady
 from homeassistant.const import (
     CONF_ADDRESS,
     CONF_API_KEY,
@@ -17,6 +30,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from modbus_connection import ModbusTcpParams
 
 from .const import (
     CONF_CONNECTION,
@@ -76,15 +90,28 @@ async def async_setup_entry(
             session=async_get_clientsession(hass),
         )
     else:
-        serial_number = entry.data[CONF_SERIAL_NUMBER]
         host = entry.data[CONF_HOST]
         port = entry.data[CONF_PORT]
         address = entry.data[CONF_ADDRESS]
-        client = XthermaClientModbus(
-            host=host,
-            port=port,
-            address=address,
-        )
+        # the shared connection is held by the modbus integration and
+        # closed when the last holding entry unloads; nothing to register
+        # on unload here
+        params = ModbusTcpParams(host=host, port=int(port))
+        if async_get_unit is not None:
+            unit = async_get_unit(hass, entry, params, int(address))
+        else:
+            # the modbus component (and its pymodbus requirement) may
+            # have become available since this module was imported;
+            # import under an alias so the module global is not shadowed
+            try:
+                from homeassistant.components.modbus import (  # noqa: PLC0415
+                    async_get_unit as _unit_factory,
+                )
+            except ImportError as err:
+                _LOGGER.exception("Modbus component unavailable")
+                raise ConfigEntryNotReady from err
+            unit = _unit_factory(hass, entry, params, int(address))
+        client = XthermaClientModbus(unit)
 
     coordinator = XthermaDataUpdateCoordinator(hass, entry, client)
     device_info = dr.DeviceInfo(
@@ -104,7 +131,7 @@ async def async_setup_entry(
     # will be thrown, causing HA to retry this entire setup after a while.
     try:
         await coordinator.async_config_entry_first_refresh()
-    except:
+    except Exception:
         await coordinator.close()
         raise
 
@@ -199,6 +226,13 @@ async def async_migrate_entities(
         registry,
         config_entry.entry_id,
     ):
+        # In Home Assistant, suggested_object_id is an internal Entity Registry
+        # property that integrations use to propose a default object ID when an
+        # entity is first created. We don't do that. Early versions of this
+        # integration used bad entity creation leading to having this value
+        # set, preventing HA's standard automated naming. suggested_object_id
+        # is quite sticky: the only way to ever get rid of it is to delete and
+        # quickly re-created the entity, which is what we do here.
         if entity_entry.suggested_object_id is not None:
             _LOGGER.debug(
                 "remove suggested_object_id from entity entry %s",

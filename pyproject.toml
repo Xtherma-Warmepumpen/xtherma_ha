@@ -9,9 +9,6 @@ authors = [
 requires-python = '>=3.13,<3.15'
 dynamic = ["dependencies"]
 
-[tool.ruff]
-extend-exclude = ["custom_components/xtherma_fp/vendor"]
-
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [

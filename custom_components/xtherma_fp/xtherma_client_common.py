@@ -1,46 +1,14 @@
 """Common definitions for Xtherma client variants."""
 
-from abc import abstractmethod
-from collections.abc import Callable
+from abc import ABC, abstractmethod
 from datetime import timedelta
 
 from homeassistant.helpers.entity import EntityDescription
 
-Factor = Callable[[int], float | int]
-_FACTORS: dict[str, Callable] = {
-    "*1000": lambda value: value * 1000,
-    "*100": lambda value: value * 100,
-    "*10": lambda value: value * 10,
-    "1000": lambda value: value * 1000,
-    "100": lambda value: value * 100,
-    "10": lambda value: value * 10,
-    "/1000": lambda value: value / 1000,
-    "/100": lambda value: value / 100,
-    "/10": lambda value: value / 10,
-}
-
-_RFACTORS: dict[str, Callable] = {
-    "*1000": lambda value: value / 1000,
-    "*100": lambda value: value / 100,
-    "*10": lambda value: value / 10,
-    "1000": lambda value: value / 1000,
-    "100": lambda value: value / 100,
-    "10": lambda value: value / 10,
-    "/1000": lambda value: value * 1000,
-    "/100": lambda value: value * 100,
-    "/10": lambda value: value * 10,
-}
+from .pytherma.exceptions import XthermaError
 
 
-class XthermaModbusBusyError(Exception):
-    """Exception indicating busy on Modbus read or write."""
-
-    def __init__(self) -> None:
-        """Class constructor."""
-        super().__init__("Modbus is busy")
-
-
-class XthermaRestBusyError(Exception):
+class XthermaRestBusyError(XthermaError):
     """Exception indicating busy on REST API read."""
 
     def __init__(self) -> None:
@@ -48,23 +16,7 @@ class XthermaRestBusyError(Exception):
         super().__init__("REST API is busy")
 
 
-class XthermaError(Exception):
-    """Exception indicating a unspecified error."""
-
-    def __init__(self, msg: str = "General error") -> None:
-        """Class constructor."""
-        super().__init__(msg)
-
-
-class XthermaNotConnectedError(Exception):
-    """Exception indicating the client is not connected."""
-
-    def __init__(self) -> None:
-        """Class constructor."""
-        super().__init__("Not connected error")
-
-
-class XthermaRestApiError(Exception):
+class XthermaRestApiError(XthermaError):
     """Exception indicating a REST API error."""
 
     def __init__(self, code: int) -> None:
@@ -73,23 +25,15 @@ class XthermaRestApiError(Exception):
         self.code = code
 
 
-class XthermaModbusError(Exception):
-    """Exception indicating a Modbus error."""
+class XthermaRestMalformedError(XthermaError):
+    """Exception indicating a malformed REST API response."""
 
     def __init__(self) -> None:
         """Class constructor."""
-        super().__init__()
+        super().__init__("malformed REST API response")
 
 
-class XthermaModbusEmptyDataError(Exception):
-    """Exception empty data was received via Modbus."""
-
-    def __init__(self) -> None:
-        """Class constructor."""
-        super().__init__()
-
-
-class XthermaReadOnlyError(Exception):
+class XthermaReadOnlyError(XthermaError):
     """Exception indicating a data is read-only."""
 
     def __init__(self) -> None:
@@ -97,7 +41,7 @@ class XthermaReadOnlyError(Exception):
         super().__init__()
 
 
-class XthermaTimeoutError(Exception):
+class XthermaTimeoutError(XthermaError):
     """Exception indicating a communication timeout."""
 
     def __init__(self) -> None:
@@ -105,7 +49,7 @@ class XthermaTimeoutError(Exception):
         super().__init__("timeout")
 
 
-class XthermaClient:
+class XthermaClient(ABC):
     """Base class for Xtherma clients."""
 
     @abstractmethod
@@ -137,15 +81,3 @@ class XthermaClient:
     def get_entity_descriptions(self) -> list[EntityDescription]:
         """Get all entity descriptions."""
         raise NotImplementedError
-
-    def _apply_input_factor(self, value: int, inputfactor: str | None) -> int | float:
-        if not inputfactor:
-            return value
-        function = _FACTORS.get(inputfactor, lambda v: v)
-        return function(value)
-
-    def _reverse_apply_input_factor(self, value: float, inputfactor: str | None) -> int:
-        if not isinstance(inputfactor, str):
-            return int(value)
-        function = _RFACTORS.get(inputfactor, lambda v: v)
-        return function(value)
