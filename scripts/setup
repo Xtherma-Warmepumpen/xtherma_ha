@@ -4,7 +4,12 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-python3 -m pip install --requirement requirements.txt
-python3 -m pip install --requirement dev-requirements.txt
-sudo apt-get update
-sudo apt-get install -y --no-install-recommends iputils-ping
+# When using Dockerfile, the venv is already present
+pip install --upgrade uv
+if [ ! -d "/home/vscode/.venvs/homeassistant" ]; then
+    uv venv /home/vscode/.venvs/homeassistant --python /usr/local/bin/python
+fi
+
+source /home/vscode/.venvs/homeassistant/bin/activate
+uv pip install --requirement requirements.txt --requirement dev-requirements.txt
+python scripts/sync-modbus-pins.py

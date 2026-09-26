@@ -8,6 +8,7 @@
             "name": "Home Assistant",
             "type": "debugpy",
             "request": "launch",
+            "python": "/home/vscode/.venvs/homeassistant/bin/python",
             "module": "homeassistant",
             "args": [
                 "--debug",
@@ -15,7 +16,8 @@
                 "config"
             ],
             "console": "integratedTerminal",
-            "justMyCode": false
+            "subProcess": false,
+            "justMyCode": true,
         },
         {
             "name": "Home Assistant: Debug Current Test File",
@@ -23,14 +25,19 @@
             "request": "launch",
             "module": "pytest",
             "console": "integratedTerminal",
-            "args": ["-vv", "${file}"],
+            "args": [
+                "-vv",
+                "${file}"
+            ],
         },
         {
             "name": "Python: Debug Tests",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
-            "purpose": ["debug-test"],
+            "purpose": [
+                "debug-test"
+            ],
             "console": "integratedTerminal",
             "justMyCode": false
         }

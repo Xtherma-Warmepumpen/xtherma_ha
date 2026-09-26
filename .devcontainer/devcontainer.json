@@ -1,7 +1,10 @@
 {
     "name": "xtherma/integration_xtherma_fp",
-    "image": "mcr.microsoft.com/devcontainers/python:3.13-trixie",
-    "updateContentCommand": "scripts/setup",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "onCreateCommand": "scripts/setup",
     "forwardPorts": [
         8123
     ],
@@ -21,7 +24,9 @@
                 "ryanluker.vscode-coverage-gutters"
             ],
             "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.defaultInterpreterPath": "/home/vscode/.venvs/homeassistant/bin/python",
+                "python.terminal.activateEnvironment": true,
+                "python.terminal.activateEnvInCurrentTerminal": true,
                 "[python]": {
                     "editor.defaultFormatter": "charliermarsh.ruff"
                 }
@@ -31,14 +36,11 @@
     "remoteUser": "vscode",
     "mounts": [
         "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,readonly",
+        "type=bind,source=${localEnv:HOME}/.local/share/opencode/,target=/home/vscode/.local/share/opencode/",
+        "type=bind,source=${localEnv:HOME}/.local/state/opencode/,target=/home/vscode/.local/state/opencode/",
+        "type=bind,source=${localEnv:HOME}/.config/opencode/,target=/home/vscode/.config/opencode/"
     ],
-    "features": {
-        "ghcr.io/devcontainers-extra/features/apt-packages:1": {
-            "packages": [
-                "ffmpeg",
-                "libturbojpeg0",
-                "libpcap-dev"
-            ]
-        }
+    "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin"
     }
 }

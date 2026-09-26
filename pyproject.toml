@@ -6,7 +6,7 @@ version = "v0.1"
 authors = [
   {name = "xrad"},
 ]
-requires-python = '>=3.13,<3.14'
+requires-python = '>=3.13,<3.15'
 dynamic = ["dependencies"]
 
 [tool.ruff]
@@ -32,6 +32,7 @@ ignore = [
   "Q",
   "COM812",
   "COM819",
+  "CPY001",
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -43,6 +44,10 @@ ignore = [
   ]
   "tests/conftest.py" = [
     "E402"      # Module level import not at top of cell
+  ]
+  "scripts/sync-modbus-pins.py" = [
+    "T201",     # print
+    "S603",     # subprocess pip install: input is the HA core modbus manifest (trusted, pinned)
   ]
 
 [tool.ruff.lint.pydocstyle]
