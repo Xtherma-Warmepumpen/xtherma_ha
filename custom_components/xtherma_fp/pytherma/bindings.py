@@ -230,6 +230,7 @@ _REST_QUANTITY_KEYS: tuple[str, ...] = (
     "efficiency_total",
     "out_backup",
     "in_backup",
+    "in_total",
     "day_hp_out_h",
     "day_hp_in_h",
     "day_hp_out_c",

@@ -16,7 +16,7 @@ from custom_components.xtherma_fp.pytherma.bindings import (
 from custom_components.xtherma_fp.pytherma.quantities import QUANTITY_BY_KEY
 
 #: quantities reachable only via Modbus (no Fernportal REST wire key)
-MODBUS_ONLY_KEYS = {"808", "815", "error", "in_total", "out_total", "x2400", "x2401"}
+MODBUS_ONLY_KEYS = {"808", "815", "error", "out_total", "x2400", "x2401"}
 
 #: quantities reachable only via REST (no Modbus address)
 REST_ONLY_KEYS = {"error_1", "error_2"}
@@ -58,8 +58,8 @@ def test_modbus_only_quantities() -> None:
 
 
 def test_rest_binding_count() -> None:
-    assert len(REST_BINDINGS) == 87
-    assert len(REST_BINDING_BY_API_KEY) == 87
+    assert len(REST_BINDINGS) == 88
+    assert len(REST_BINDING_BY_API_KEY) == 88
 
 
 def test_rest_api_key_baseline() -> None:

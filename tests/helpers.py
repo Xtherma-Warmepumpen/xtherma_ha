@@ -140,7 +140,8 @@ def provide_modbus_data(
     for entry in all_values:
         key = entry[KEY_ENTRY_KEY]
         key = rest_key_to_modbus_key(key)
-        if key is None:
+        # API-only keys (no Modbus register) carry no value for the simulator
+        if key is None or key not in MODBUS_BINDING_BY_KEY:
             continue
         raw_value = entry[KEY_ENTRY_VALUE]
         value = int(raw_value) if isinstance(raw_value, (int, str)) else 0

@@ -4299,6 +4299,66 @@
     'state': '0.0',
   })
 # ---
+# name: test_setup_sensor_rest_api[mock_rest_api_client0][sensor.test_entry_xtherma_config_overall_system_power_consumption_electric-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SensorEntityCapabilityAttribute.STATE_CLASS: 'state_class'>: <SensorStateClass.MEASUREMENT: 'measurement'>,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'sensor',
+    'entity_category': None,
+    'entity_id': 'sensor.test_entry_xtherma_config_overall_system_power_consumption_electric',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Overall system power consumption (electric)',
+    'options': dict({
+      'sensor': dict({
+        'suggested_display_precision': 0,
+      }),
+    }),
+    'original_device_class': <SensorDeviceClass.POWER: 'power'>,
+    'original_icon': 'mdi:lightning-bolt',
+    'original_name': 'Overall system power consumption (electric)',
+    'platform': 'xtherma_fp',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'in_total',
+    'unique_id': 'test_entry_xtherma-in_total',
+    'unit_of_measurement': <UnitOfPower.WATT: 'W'>,
+  })
+# ---
+# name: test_setup_sensor_rest_api[mock_rest_api_client0][sensor.test_entry_xtherma_config_overall_system_power_consumption_electric-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'power',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config Overall system power consumption (electric)',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:lightning-bolt',
+      'parameter': 'in_total',
+      <SensorEntityCapabilityAttribute.STATE_CLASS: 'state_class'>: <SensorStateClass.MEASUREMENT: 'measurement'>,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfPower.WATT: 'W'>,
+    }),
+    'context': <ANY>,
+    'entity_id': 'sensor.test_entry_xtherma_config_overall_system_power_consumption_electric',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
 # name: test_setup_sensor_rest_api[mock_rest_api_client0][sensor.test_entry_xtherma_config_pkl_circulation_pump_performance-entry]
   EntityRegistryEntrySnapshot({
     'aliases': list([

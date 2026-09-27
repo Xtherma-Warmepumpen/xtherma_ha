@@ -26,10 +26,10 @@ def test_json_load_value_fixture():
     assert data.get("serial_number") == "FP-04-123456"
     settings = data.get("settings")
     assert isinstance(settings, list)
-    assert len(settings) == 36
+    assert len(settings) == 40
     telemetry = data.get("telemetry")
     assert isinstance(telemetry, list)
-    assert len(telemetry) == 55
+    assert len(telemetry) == 58
     t0 = telemetry[0]
     assert isinstance(t0, dict)
     assert t0.get("key") == "tvl"
