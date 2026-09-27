@@ -114,6 +114,7 @@ _UNIT_MAP: dict[
     | UnitOfVolumeFlowRate,
 ] = {
     "°C": UnitOfTemperature.CELSIUS,
+    "K": UnitOfTemperature.KELVIN,
     "Hz": UnitOfFrequency.HERTZ,
     "L/min": UnitOfVolumeFlowRate.LITERS_PER_MINUTE,
     "W": UnitOfPower.WATT,

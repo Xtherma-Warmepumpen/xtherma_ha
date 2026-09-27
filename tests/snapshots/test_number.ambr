@@ -1361,7 +1361,7 @@
     'supported_features': 0,
     'translation_key': '813',
     'unique_id': 'test_entry_xtherma-813',
-    'unit_of_measurement': <UnitOfTemperature.CELSIUS: '°C'>,
+    'unit_of_measurement': <UnitOfTemperature.KELVIN: 'K'>,
   })
 # ---
 # name: test_setup_number_modbus_tcp[mock_modbus_tcp_client0][number.test_entry_xtherma_modbus_config_sg_ready_lower_cooling_temperature_by-state]
@@ -1375,7 +1375,7 @@
       <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
       'parameter': '813',
       <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
-      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.CELSIUS: '°C'>,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.KELVIN: 'K'>,
     }),
     'context': <ANY>,
     'entity_id': 'number.test_entry_xtherma_modbus_config_sg_ready_lower_cooling_temperature_by',
@@ -1424,7 +1424,7 @@
     'supported_features': 0,
     'translation_key': '811',
     'unique_id': 'test_entry_xtherma-811',
-    'unit_of_measurement': <UnitOfTemperature.CELSIUS: '°C'>,
+    'unit_of_measurement': <UnitOfTemperature.KELVIN: 'K'>,
   })
 # ---
 # name: test_setup_number_modbus_tcp[mock_modbus_tcp_client0][number.test_entry_xtherma_modbus_config_sg_ready_raise_heating_temperature_by-state]
@@ -1438,7 +1438,7 @@
       <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
       'parameter': '811',
       <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
-      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.CELSIUS: '°C'>,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.KELVIN: 'K'>,
     }),
     'context': <ANY>,
     'entity_id': 'number.test_entry_xtherma_modbus_config_sg_ready_raise_heating_temperature_by',
@@ -1487,7 +1487,7 @@
     'supported_features': 0,
     'translation_key': '812',
     'unique_id': 'test_entry_xtherma-812',
-    'unit_of_measurement': <UnitOfTemperature.CELSIUS: '°C'>,
+    'unit_of_measurement': <UnitOfTemperature.KELVIN: 'K'>,
   })
 # ---
 # name: test_setup_number_modbus_tcp[mock_modbus_tcp_client0][number.test_entry_xtherma_modbus_config_sg_ready_raise_warm_water_temperature_by-state]
@@ -1501,7 +1501,7 @@
       <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
       'parameter': '812',
       <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
-      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.CELSIUS: '°C'>,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.KELVIN: 'K'>,
     }),
     'context': <ANY>,
     'entity_id': 'number.test_entry_xtherma_modbus_config_sg_ready_raise_warm_water_temperature_by',
@@ -2936,7 +2936,7 @@
     'supported_features': 0,
     'translation_key': '813',
     'unique_id': 'test_entry_xtherma-813',
-    'unit_of_measurement': <UnitOfTemperature.CELSIUS: '°C'>,
+    'unit_of_measurement': <UnitOfTemperature.KELVIN: 'K'>,
   })
 # ---
 # name: test_setup_number_rest_api[mock_rest_api_client0][number.test_entry_xtherma_config_sg_ready_lower_cooling_temperature_by-state]
@@ -2950,7 +2950,7 @@
       <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
       'parameter': '813',
       <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
-      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.CELSIUS: '°C'>,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.KELVIN: 'K'>,
     }),
     'context': <ANY>,
     'entity_id': 'number.test_entry_xtherma_config_sg_ready_lower_cooling_temperature_by',
@@ -2999,7 +2999,7 @@
     'supported_features': 0,
     'translation_key': '811',
     'unique_id': 'test_entry_xtherma-811',
-    'unit_of_measurement': <UnitOfTemperature.CELSIUS: '°C'>,
+    'unit_of_measurement': <UnitOfTemperature.KELVIN: 'K'>,
   })
 # ---
 # name: test_setup_number_rest_api[mock_rest_api_client0][number.test_entry_xtherma_config_sg_ready_raise_heating_temperature_by-state]
@@ -3013,7 +3013,7 @@
       <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
       'parameter': '811',
       <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
-      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.CELSIUS: '°C'>,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.KELVIN: 'K'>,
     }),
     'context': <ANY>,
     'entity_id': 'number.test_entry_xtherma_config_sg_ready_raise_heating_temperature_by',
@@ -3062,7 +3062,7 @@
     'supported_features': 0,
     'translation_key': '812',
     'unique_id': 'test_entry_xtherma-812',
-    'unit_of_measurement': <UnitOfTemperature.CELSIUS: '°C'>,
+    'unit_of_measurement': <UnitOfTemperature.KELVIN: 'K'>,
   })
 # ---
 # name: test_setup_number_rest_api[mock_rest_api_client0][number.test_entry_xtherma_config_sg_ready_raise_warm_water_temperature_by-state]
@@ -3076,7 +3076,7 @@
       <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
       'parameter': '812',
       <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
-      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.CELSIUS: '°C'>,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfTemperature.KELVIN: 'K'>,
     }),
     'context': <ANY>,
     'entity_id': 'number.test_entry_xtherma_config_sg_ready_raise_warm_water_temperature_by',
