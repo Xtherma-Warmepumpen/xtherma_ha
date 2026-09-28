@@ -17,8 +17,7 @@ Document the major directories and their responsibilities.
 ├── custom_components/
 │   └── xtherma_fp/        # The integration (see Architectural Map)
 │       ├── pytherma/      # Vendored device library (quantity/binding model + device accessor)
-│       ├── translations/  # UI translations (en, de)
-│       └── vendor/        # Deprecated: vendored pymodbus (dead since D4; deletion pending)
+│       └── translations/  # UI translations (en, de)
 ├── scripts/               # Developer tooling: setup, develop, lint, release
 ├── tests/                 # Pytest suite (see Testing Architecture)
 ├── config/                # Development Home Assistant instance state
@@ -39,7 +38,7 @@ Document the major directories and their responsibilities.
     - [`select.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/select.py)
 
 ## Transport Layer
-- **Abstraction**: [`xtherma_client_common.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/xtherma_client_common.py) defines the `XthermaClient` ABC + `_FACTORS`/`_RFACTORS` scaling.
+- **Abstraction**: [`xtherma_client_common.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/xtherma_client_common.py) defines the `XthermaClient` ABC; factor scaling lives in the library's [`scaling.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/pytherma/scaling.py) (`apply_factor` + forward/reverse tables).
 - **REST Client**: [`xtherma_client_rest.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/xtherma_client_rest.py) (Read-only via Fernportal).
 - **Modbus Client**: [`xtherma_client_modbus.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/xtherma_client_modbus.py) — thin wrapper over the library's `XthermaFP` on a pre-bound `modbus_connection.ModbusUnit` handle; owns no transport or lifecycle (D4).
 - **Unit acquisition**: `__init__.py` (setup) obtains the unit via `homeassistant.components.modbus.async_get_unit`; `config_flow.py` probes via `async_get_temporary_unit`. Holders of the same `host:port` share one serialized connection; the `modbus` integration owns the link and closes it when the last holding entry unloads.
@@ -58,8 +57,6 @@ Document the major directories and their responsibilities.
 - **Internal**:
     - `pytherma` (vendored device library at `custom_components/xtherma_fp/pytherma/`; version `0.2.0`).
     - `modbus-connection` (`>=4.10.0,<5`; HA core pins `==4.10.0`, production backend tmodbus).
-- **Deprecated**:
-    - Vendored `pymodbus` under [`vendor/pymodbus/`](/workspaces/xtherma_ha/custom_components/xtherma_fp/vendor/pymodbus/) — dead since D4, deletion pending approval.
 - **External**:
     - Home Assistant Core (`2026.9.x`).
     - `asyncio` (Standard Library).
