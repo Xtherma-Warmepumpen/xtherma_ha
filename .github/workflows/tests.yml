@@ -7,6 +7,14 @@ on:
   pull_request:
   schedule:
     - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 env:
   DEFAULT_PYTHON: "3.14"
@@ -15,6 +23,7 @@ jobs:
   pre-commit:
     runs-on: "ubuntu-latest"
     name: Pre-commit and pytest
+    timeout-minutes: 30
     steps:
       - name: Check out the repository
         uses: actions/checkout@v7
@@ -47,6 +56,7 @@ jobs:
     runs-on: "ubuntu-latest"
     name: HACS
     if: github.repository_owner == 'Xtherma-Warmepumpen'
+    timeout-minutes: 10
     steps:
       - name: Check out the repository
         uses: "actions/checkout@v7"
@@ -60,6 +70,7 @@ jobs:
   hassfest:
     runs-on: "ubuntu-latest"
     name: Hassfest
+    timeout-minutes: 10
     steps:
       - name: Check out the repository
         uses: "actions/checkout@v7"
