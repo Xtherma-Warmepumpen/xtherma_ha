@@ -5,7 +5,7 @@ Xtherma heatpump integration for Home Assistant (Python $\ge3.13$, HA `2026.9.x`
 ## Rules
 
 1. **Prioritize Interfaces:** When inspecting reference layers such middlewares and generated code, prioritized reading interface files (headers) over implementation.
-2. **Git usage:** Never use `git push`. Never delete branches. Never use `git reset`.
+2. **Git usage:** Never use `git push`. Never delete branches. Never use `git reset`. Never use `git commit` without express authorization by user.
 
 ## Coding Standards
 
