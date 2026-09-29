@@ -6,4 +6,3 @@ repos:
         args:
           - --fix
       - id: ruff-format
-        files: ^((custom_components|tests)/.+)?[^/]+\.(py|pyi)$
