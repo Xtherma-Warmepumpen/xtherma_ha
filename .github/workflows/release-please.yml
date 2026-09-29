@@ -1,0 +1,40 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Release please
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 10
+    steps:
+      - name: Run release-please
+        id: release_please
+        uses: googleapis/release-please-action@v4
+
+      - name: Check out release tag ${{ steps.release_please.outputs.tag_name }}
+        if: ${{ steps.release_please.outputs.release_created == 'true' }}
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.release_please.outputs.tag_name }}
+
+      - name: Assert manifest.json version matches release tag
+        if: ${{ steps.release_please.outputs.release_created == 'true' }}
+        run: |
+          tag='${{ steps.release_please.outputs.tag_name }}'
+          manifest_version="$(jq -r '.version' custom_components/xtherma_fp/manifest.json)"
+          if [ "v${manifest_version}" != "${tag}" ]; then
+            echo "::error::manifest.json version v${manifest_version} does not match release tag ${tag}"
+            exit 1
+          fi
