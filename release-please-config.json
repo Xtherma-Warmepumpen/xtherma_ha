@@ -1,13 +1,18 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "release-type": "simple",
+  "include-component-in-tag": false,
   "skip-changelog": true,
   "last-release-sha": "76d1eae7cddcbf1790823d024850b16f63894f29",
-  "extra-files": [
-    {
-      "type": "json",
-      "path": "custom_components/xtherma_fp/manifest.json",
-      "jsonpath": "$.version"
+  "packages": {
+    ".": {
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "custom_components/xtherma_fp/manifest.json",
+          "jsonpath": "$.version"
+        }
+      ]
     }
-  ]
+  }
 }
