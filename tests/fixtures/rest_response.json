@@ -69,14 +69,14 @@
     },
     {
       "key": "351",
-      "name": "351 - Kühlkurve 1 Außentemperatur [TA] niedrig (P1)",
+      "name": "351 - Kühlkurve 1 Außentemperatur [TA] niedrig (P1, Grenztemperatur)",
       "value": 28,
       "min": "16",
       "max": "32",
       "mapping": null,
       "unit": " °C",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "352",
@@ -190,14 +190,14 @@
     },
     {
       "key": "451",
-      "name": "451 - Kühlkurve 2 Außentemperatur [TA] niedrig (P1)",
+      "name": "451 - Kühlkurve 2 Außentemperatur [TA] niedrig (P1, Grenztemperatur)",
       "value": 33,
       "min": "16",
       "max": "32",
       "mapping": null,
       "unit": " °C",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "452",
@@ -263,7 +263,7 @@
       "mapping": null,
       "unit": " °C",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "811",
@@ -272,9 +272,9 @@
       "min": "0",
       "max": "30",
       "mapping": null,
-      "unit": " °C",
+      "unit": " K",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "812",
@@ -296,7 +296,7 @@
       "mapping": null,
       "unit": " K",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "412",
@@ -326,7 +326,7 @@
       "value": 4,
       "min": null,
       "max": null,
-      "mapping": "Standby:0;Heizbetrieb:1;Kühlbetrieb:2;Warmwasser:3;Automatik:4",
+      "mapping": "Standby,Heizbetrieb,Kühlbetrieb,Warmwasser,Automatik",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -337,7 +337,7 @@
       "value": 1,
       "min": null,
       "max": null,
-      "mapping": null,
+      "mapping": "Aus,Ein",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -356,12 +356,12 @@
     {
       "key": "in_total",
       "name": "in_total - Leistungsaufnahme Gesamtsystem",
-      "value": 0.9,
+      "value": null,
       "min": "0",
       "max": "99999",
       "mapping": null,
       "unit": "kW",
-      "output_factor": "",
+      "output_factor": "(R783+R788)/100",
       "input_factor": ""
     },
     {
@@ -396,6 +396,50 @@
       "unit": null,
       "output_factor": "",
       "input_factor": null
+    },
+    {
+      "key": "816",
+      "name": "816 - SG Ready Heizkreis 2 Temperatur anheben um (ΔT)",
+      "value": 0,
+      "min": "0",
+      "max": "30",
+      "mapping": null,
+      "unit": "K",
+      "output_factor": "",
+      "input_factor": ""
+    },
+    {
+      "key": "817",
+      "name": "817 - SG Ready Kühlkreis 1 Temperatur senken um (ΔT)",
+      "value": 0,
+      "min": "0",
+      "max": "30",
+      "mapping": null,
+      "unit": " K",
+      "output_factor": "",
+      "input_factor": ""
+    },
+    {
+      "key": "818",
+      "name": "818 - SG Ready Kühlkreis 2 Temperatur senken um (ΔT)",
+      "value": 0,
+      "min": "0",
+      "max": "30",
+      "mapping": null,
+      "unit": " K",
+      "output_factor": "",
+      "input_factor": ""
+    },
+    {
+      "key": "815",
+      "name": "815 - SG Ready Heizkreis 1 Temperatur erhöhen um (ΔT)",
+      "value": 0,
+      "min": "0",
+      "max": "30",
+      "mapping": null,
+      "unit": " K",
+      "output_factor": "",
+      "input_factor": ""
     }
   ],
   "telemetry": [
@@ -557,12 +601,12 @@
       "key": "evu",
       "name": "evu - SGA Klemme ",
       "value": 0,
-      "min": null,
-      "max": null,
+      "min": "",
+      "max": "",
       "mapping": null,
-      "unit": null,
-      "output_factor": "",
-      "input_factor": null
+      "unit": "%",
+      "output_factor": "*100",
+      "input_factor": ""
     },
     {
       "key": "pkl",
@@ -581,7 +625,7 @@
       "value": 0,
       "min": null,
       "max": null,
-      "mapping": "0:Aus;1:Ein",
+      "mapping": "Aus,Ein",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -592,7 +636,7 @@
       "value": 0,
       "min": null,
       "max": null,
-      "mapping": "0:Aus;1:Ein",
+      "mapping": "Aus,Ein",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -603,7 +647,7 @@
       "value": 0,
       "min": null,
       "max": null,
-      "mapping": "0:Aus;1:Ein",
+      "mapping": "Aus,Ein",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -612,12 +656,12 @@
       "key": "pww",
       "name": "pww - [PWW] Zirkulationspumpe Warmwasser eingeschaltet",
       "value": 1,
-      "min": null,
-      "max": null,
+      "min": "",
+      "max": "",
       "mapping": null,
-      "unit": null,
-      "output_factor": "",
-      "input_factor": null
+      "unit": "%",
+      "output_factor": "*100",
+      "input_factor": ""
     },
     {
       "key": "hw_target",
@@ -733,12 +777,12 @@
       "key": "efficiency_hp",
       "name": "efficiency_hp - Leistungszahl Wärmepumpe",
       "value": 0,
-      "min": null,
-      "max": null,
+      "min": "",
+      "max": "",
       "mapping": null,
-      "unit": null,
-      "output_factor": "",
-      "input_factor": null
+      "unit": "",
+      "output_factor": "clamp(x/100, 0, 120)",
+      "input_factor": ""
     },
     {
       "key": "efficiency_total",
@@ -755,23 +799,23 @@
       "key": "in_backup",
       "name": "in_backup - Leistungsaufnahme Zusatz-/Notheizung (elektrisch)",
       "value": 0,
-      "min": null,
-      "max": null,
+      "min": "",
+      "max": "",
       "mapping": null,
       "unit": " W",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "out_backup",
       "name": "out_backup - Leistungsabgabe Zusatz-/Notheizung (thermisch)",
       "value": 0,
-      "min": null,
-      "max": null,
+      "min": "",
+      "max": "",
       "mapping": null,
-      "unit": " W",
+      "unit": "W",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "ta8",
@@ -790,7 +834,7 @@
       "value": 0,
       "min": null,
       "max": null,
-      "mapping": "Aus:0;Normalbetrieb:1;Sperre:2;Temperatur anheben:3;Anlaufbefehl:4;§14a EnWG:5",
+      "mapping": "Aus,Normalbetrieb,Sperre,Temperatur anheben,Anlaufbefehl,§14a EnWG",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -799,34 +843,34 @@
       "key": "day_hp_out_h",
       "name": "day_hp_out_h - Tag Heizbetrieb thermische Leistungsabgabe",
       "value": 1428,
-      "min": null,
-      "max": null,
+      "min": "0",
+      "max": "22000",
       "mapping": null,
       "unit": " kWh",
-      "output_factor": "",
-      "input_factor": null
+      "output_factor": "/1000",
+      "input_factor": ""
     },
     {
       "key": "day_hp_out_c",
       "name": "day_hp_out_c - Tag Kühlbetrieb thermische Leistungsabgabe",
       "value": 0,
-      "min": null,
-      "max": null,
+      "min": "0",
+      "max": "22000",
       "mapping": null,
       "unit": " kWh",
-      "output_factor": "",
-      "input_factor": null
+      "output_factor": "/1000",
+      "input_factor": ""
     },
     {
       "key": "day_hp_out_hw",
       "name": "day_hp_out_hw - Tag Warmwasserbetrieb thermische Leistungsabgabe",
       "value": 398,
-      "min": null,
-      "max": null,
+      "min": "0",
+      "max": "22000",
       "mapping": null,
       "unit": " kWh",
-      "output_factor": "",
-      "input_factor": null
+      "output_factor": "/1000",
+      "input_factor": ""
     },
     {
       "key": "day_backup3_out_h",
@@ -876,12 +920,12 @@
       "key": "day_hp_in_h",
       "name": "day_hp_in_h - Tag Heizbetrieb elektrische Leistungsaufnahme",
       "value": 244,
-      "min": null,
-      "max": null,
+      "min": "0",
+      "max": "22000",
       "mapping": null,
       "unit": " kWh",
-      "output_factor": "",
-      "input_factor": null
+      "output_factor": "/1000",
+      "input_factor": ""
     },
     {
       "key": "day_hp_in_c",
@@ -898,12 +942,12 @@
       "key": "day_hp_in_hw",
       "name": "day_hp_in_hw - Tag Warmwasserbetrieb elektrische Leistungsaufnahme",
       "value": 119,
-      "min": null,
-      "max": null,
+      "min": "0",
+      "max": "22000",
       "mapping": null,
       "unit": " kWh",
-      "output_factor": "",
-      "input_factor": null
+      "output_factor": "/1000",
+      "input_factor": ""
     },
     {
       "key": "day_backup3_in_hw",
@@ -955,7 +999,7 @@
       "value": 0,
       "min": null,
       "max": null,
-      "mapping": "0:Aus;1:Ein",
+      "mapping": "Aus,Ein",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -973,14 +1017,14 @@
     },
     {
       "key": "error_2",
-      "name": "error_2 - Wärmmepumpe ungestört (nicht durch Fehler ö.ä. geblockt)",
+      "name": "error_2 - Wärmepumpe ungestört (nicht durch Fehler ö.ä. geblockt)",
       "value": 1,
-      "min": null,
-      "max": null,
+      "min": "",
+      "max": "",
       "mapping": null,
-      "unit": null,
+      "unit": "",
       "output_factor": "",
-      "input_factor": null
+      "input_factor": ""
     },
     {
       "key": "mode",
@@ -988,7 +1032,7 @@
       "value": 3,
       "min": null,
       "max": null,
-      "mapping": "Standby:0;Heizbetrieb:1;Kühlbetrieb:2;Warmwasserbetrieb:3;Automatik:4",
+      "mapping": "Standby,Heizbetrieb,Kühlbetrieb,Warmwasserbetrieb,Automatik",
       "unit": null,
       "output_factor": "",
       "input_factor": null
@@ -1000,6 +1044,39 @@
       "min": null,
       "max": null,
       "mapping": null,
+      "unit": null,
+      "output_factor": "",
+      "input_factor": null
+    },
+    {
+      "key": "in_hp_kw",
+      "name": "in_hp_kw - Leistungsaufnahme Wärmepumpe (elektrisch) (Kopie)",
+      "value": 0,
+      "min": "",
+      "max": "",
+      "mapping": null,
+      "unit": "kW",
+      "output_factor": "clamp(x/100, 0, 120)",
+      "input_factor": ""
+    },
+    {
+      "key": "out_hp_kw",
+      "name": "out_hp_kw - Leistungsabgabe Wärmepumpe (thermisch) (Kopie)",
+      "value": 0,
+      "min": "",
+      "max": "",
+      "mapping": null,
+      "unit": " kW",
+      "output_factor": "clamp(x/100, 0, 120)",
+      "input_factor": ""
+    },
+    {
+      "key": "error_1",
+      "name": "error_1 - Hydraulik fehlerfrei",
+      "value": 0,
+      "min": null,
+      "max": null,
+      "mapping": "Ok,Störung",
       "unit": null,
       "output_factor": "",
       "input_factor": null

@@ -24,7 +24,7 @@ from homeassistant.helpers.translation import async_get_translations
 from custom_components.xtherma_fp.const import DOMAIN
 from custom_components.xtherma_fp.entity_descriptors import (
     ENTITY_DESCRIPTIONS,
-    MODBUS_ENTITY_DESCRIPTIONS,
+    MODBUS_DESCRIPTORS,
 )
 from tests.helpers import provide_rest_data
 
@@ -55,8 +55,7 @@ async def test_binary_sensor_name_translation(hass, mock_rest_api_client):
         }
         entity_names_modbus = {
             f"{prefix}.{entity_description.key}.name"
-            for reg_desc in MODBUS_ENTITY_DESCRIPTIONS
-            for entity_description in reg_desc.descriptors
+            for entity_description in MODBUS_DESCRIPTORS
             if isinstance(entity_description, entity_classes)
         }
 
@@ -89,8 +88,7 @@ async def test_sensor_name_translation(hass, mock_rest_api_client):
         }
         entity_names_modbus = {
             f"{prefix}.{entity_description.key}.name"
-            for reg_desc in MODBUS_ENTITY_DESCRIPTIONS
-            for entity_description in reg_desc.descriptors
+            for entity_description in MODBUS_DESCRIPTORS
             if isinstance(entity_description, entity_classes)
         }
 
@@ -105,8 +103,7 @@ def _get_all_entity_descriptions() -> list[EntityDescription]:
 
     all_descs: list[EntityDescription] = [
         entity_description
-        for reg_desc in MODBUS_ENTITY_DESCRIPTIONS
-        for entity_description in reg_desc.descriptors
+        for entity_description in MODBUS_DESCRIPTORS
         if isinstance(entity_description, EntityDescription)
     ]
     all_descs.extend(ENTITY_DESCRIPTIONS)
@@ -171,8 +168,7 @@ async def test_switch_name_translation(hass, mock_rest_api_client):
         }
         entity_names_modbus = {
             f"{prefix}.{entity_description.key}.name"
-            for reg_desc in MODBUS_ENTITY_DESCRIPTIONS
-            for entity_description in reg_desc.descriptors
+            for entity_description in MODBUS_DESCRIPTORS
             if isinstance(entity_description, entity_classes)
         }
 
@@ -205,8 +201,7 @@ async def test_number_name_translation(hass, mock_rest_api_client):
         }
         entity_names_modbus = {
             f"{prefix}.{entity_description.key}.name"
-            for reg_desc in MODBUS_ENTITY_DESCRIPTIONS
-            for entity_description in reg_desc.descriptors
+            for entity_description in MODBUS_DESCRIPTORS
             if isinstance(entity_description, entity_classes)
         }
 
@@ -239,8 +234,7 @@ async def test_select_name_translation(hass, mock_rest_api_client):
         }
         entity_names_modbus = {
             f"{prefix}.{entity_description.key}.name"
-            for reg_desc in MODBUS_ENTITY_DESCRIPTIONS
-            for entity_description in reg_desc.descriptors
+            for entity_description in MODBUS_DESCRIPTORS
             if isinstance(entity_description, entity_classes)
         }
 

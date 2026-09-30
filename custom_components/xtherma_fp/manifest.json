@@ -5,6 +5,9 @@
     "@xrad"
   ],
   "config_flow": true,
+  "dependencies": [
+    "modbus"
+  ],
   "documentation": "https://github.com/Xtherma/xtherma_ha",
   "integration_type": "device",
   "iot_class": "local_polling",

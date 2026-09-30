@@ -22,7 +22,7 @@ async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: XthermaConfigEntry,
     async_add_entities: AddEntitiesCallback,
-) -> bool:
+) -> None:
     """HA calls this to initialize sensor platform."""
     _LOGGER.debug("Setup sensor platform")
     xtherma_data = config_entry.runtime_data
@@ -46,14 +46,13 @@ async def async_setup_entry(
 
     _LOGGER.debug("Created %d sensors", len(sensors))
     async_add_entities(sensors)
-    return True
 
 
 class XthermaSensor(XthermaCoordinatorEntity, SensorEntity):
     """Xtherma Value Sensor."""
 
     # keep this for type safe access to custom members
-    xt_description: XtSensorEntityDescription
+    entity_description: XtSensorEntityDescription
 
     def __init__(
         self,
@@ -80,8 +79,8 @@ class XthermaSensor(XthermaCoordinatorEntity, SensorEntity):
     @property
     def icon(self) -> str | None:
         """Return the icon to use in the frontend, if any."""
-        if self.xt_description.icon_provider:
-            return self.xt_description.icon_provider(self.native_value)
+        if self.entity_description.icon_provider:
+            return self.entity_description.icon_provider(self.native_value)
         return super().icon
 
 
@@ -96,7 +95,17 @@ class XthermaEnumSensor(XthermaSensor):
         value = self.coordinator.read_value(self.entity_description.key)
         if value is None:
             return
-        index = int(value) % len(options)
+        index = int(value)
+        if not 0 <= index < len(options):
+            _LOGGER.warning(
+                'Enum value "%s" for %s out of range (options: %d)',
+                value,
+                self.entity_description.key,
+                len(options),
+            )
+            self._attr_native_value = None
+            self.async_write_ha_state()
+            return
         self._attr_native_value = options[index]
         self.async_write_ha_state()
 
@@ -112,6 +121,6 @@ class XthermaVersionSensor(XthermaSensor):
             return
         # note: input factor (assume: /100) has already been applied
         major = int(value)
-        minor = int((value - major) * 100)
+        minor = round((value - major) * 100)
         self._attr_native_value = f"{major}.{minor:02d}"
         self.async_write_ha_state()

@@ -27,3 +27,6 @@ config/*
 
 # ignore downloaded json
 tests/fixtures/temp.json
+
+# devcontainer lock
+*devcontainer-lock.json

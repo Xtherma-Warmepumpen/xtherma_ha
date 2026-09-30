@@ -1,8 +1,9 @@
 # serializer version: 1
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_evu_status-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -38,8 +39,8 @@
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_evu_status-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config EVU status',
-      'icon': 'mdi:electric-switch-closed',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config EVU status',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:electric-switch-closed',
       'parameter': 'evu',
     }),
     'context': <ANY>,
@@ -52,8 +53,9 @@
 # ---
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pk1_circulation_pump_circuit_1_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -89,9 +91,9 @@
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pk1_circulation_pump_circuit_1_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_modbus_config [PK1] Circulation pump circuit 1 enabled',
-      'icon': 'mdi:pump-off',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config [PK1] Circulation pump circuit 1 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump-off',
       'parameter': 'pk1',
     }),
     'context': <ANY>,
@@ -104,8 +106,9 @@
 # ---
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pk2_circulation_pump_circuit_2_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -141,9 +144,9 @@
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pk2_circulation_pump_circuit_2_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_modbus_config [PK2] Circulation pump circuit 2 enabled',
-      'icon': 'mdi:pump-off',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config [PK2] Circulation pump circuit 2 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump-off',
       'parameter': 'pk2',
     }),
     'context': <ANY>,
@@ -156,8 +159,9 @@
 # ---
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pk_circulation_pump_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -193,9 +197,9 @@
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pk_circulation_pump_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_modbus_config [PK] Circulation pump enabled',
-      'icon': 'mdi:pump-off',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config [PK] Circulation pump enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump-off',
       'parameter': 'pk',
     }),
     'context': <ANY>,
@@ -208,8 +212,9 @@
 # ---
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pww_circulation_pump_hot_water_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -245,9 +250,9 @@
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_pww_circulation_pump_hot_water_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_modbus_config [PWW] Circulation pump hot water enabled',
-      'icon': 'mdi:pump',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config [PWW] Circulation pump hot water enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump',
       'parameter': 'pww',
     }),
     'context': <ANY>,
@@ -260,8 +265,9 @@
 # ---
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_ss14a_enwg_state-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -297,7 +303,7 @@
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_ss14a_enwg_state-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_modbus_config §14a EnWG state',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config §14a EnWG state',
       'parameter': '14a',
     }),
     'context': <ANY>,
@@ -310,8 +316,9 @@
 # ---
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_system_ok-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -347,9 +354,9 @@
 # name: test_setup_binary_sensor_modbus_tcp[mock_modbus_tcp_client0][binary_sensor.test_entry_xtherma_modbus_config_system_ok-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_modbus_config System ok',
-      'icon': 'mdi:check',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_modbus_config System ok',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:check',
       'parameter': 'error',
     }),
     'context': <ANY>,
@@ -362,8 +369,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_evu_status-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -399,8 +407,8 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_evu_status-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config EVU status',
-      'icon': 'mdi:electric-switch-closed',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config EVU status',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:electric-switch-closed',
       'parameter': 'evu',
     }),
     'context': <ANY>,
@@ -413,8 +421,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pk1_circulation_pump_circuit_1_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -450,9 +459,9 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pk1_circulation_pump_circuit_1_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_config [PK1] Circulation pump circuit 1 enabled',
-      'icon': 'mdi:pump-off',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config [PK1] Circulation pump circuit 1 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump-off',
       'parameter': 'pk1',
     }),
     'context': <ANY>,
@@ -465,8 +474,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pk2_circulation_pump_circuit_2_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -502,9 +512,9 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pk2_circulation_pump_circuit_2_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_config [PK2] Circulation pump circuit 2 enabled',
-      'icon': 'mdi:pump-off',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config [PK2] Circulation pump circuit 2 enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump-off',
       'parameter': 'pk2',
     }),
     'context': <ANY>,
@@ -517,8 +527,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pk_circulation_pump_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -554,9 +565,9 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pk_circulation_pump_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_config [PK] Circulation pump enabled',
-      'icon': 'mdi:pump-off',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config [PK] Circulation pump enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump-off',
       'parameter': 'pk',
     }),
     'context': <ANY>,
@@ -569,8 +580,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pww_circulation_pump_hot_water_enabled-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -606,9 +618,9 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_pww_circulation_pump_hot_water_enabled-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_config [PWW] Circulation pump hot water enabled',
-      'icon': 'mdi:pump',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config [PWW] Circulation pump hot water enabled',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:pump',
       'parameter': 'pww',
     }),
     'context': <ANY>,
@@ -621,8 +633,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_ss14a_enwg_state-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -658,7 +671,7 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_ss14a_enwg_state-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'friendly_name': 'test_entry_xtherma_config §14a EnWG state',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config §14a EnWG state',
       'parameter': '14a',
     }),
     'context': <ANY>,
@@ -671,8 +684,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_system_fault-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -708,9 +722,9 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_system_fault-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'problem',
-      'friendly_name': 'test_entry_xtherma_config System fault',
-      'icon': 'mdi:check',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'problem',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config System fault',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:check',
       'parameter': 'error_1',
     }),
     'context': <ANY>,
@@ -723,8 +737,9 @@
 # ---
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_system_ok-entry]
   EntityRegistryEntrySnapshot({
-    'aliases': set({
-    }),
+    'aliases': list([
+      None,
+    ]),
     'area_id': None,
     'capabilities': None,
     'config_entry_id': <ANY>,
@@ -760,9 +775,9 @@
 # name: test_setup_binary_sensor_rest_api[mock_rest_api_client0][binary_sensor.test_entry_xtherma_config_system_ok-state]
   StateSnapshot({
     'attributes': ReadOnlyDict({
-      'device_class': 'running',
-      'friendly_name': 'test_entry_xtherma_config System ok',
-      'icon': 'mdi:check',
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'test_entry_xtherma_config System ok',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:check',
       'parameter': 'error_2',
     }),
     'context': <ANY>,

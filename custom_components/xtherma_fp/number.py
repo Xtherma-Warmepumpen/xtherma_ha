@@ -1,10 +1,10 @@
 """The xtherma integration numbers."""
 
+import functools
 import logging
 
 from homeassistant.components.number import NumberEntity
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import XthermaConfigEntry
@@ -18,7 +18,7 @@ async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: XthermaConfigEntry,
     async_add_entities: AddEntitiesCallback,
-) -> bool:
+) -> None:
     """HA calls this to initialize sensor platform."""
     _LOGGER.debug("Setup number platform")
     xtherma_data = config_entry.runtime_data
@@ -33,14 +33,13 @@ async def async_setup_entry(
 
     _LOGGER.debug("Created %d numbers", len(numbers))
     async_add_entities(numbers)
-    return True
 
 
 class XthermaNumberEntity(XthermaCoordinatorEntity, NumberEntity):
     """Xtherma Number Input."""
 
     # keep this for type safe access to custom members
-    xt_description: XtNumberEntityDescription
+    entity_description: XtNumberEntityDescription
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -54,31 +53,25 @@ class XthermaNumberEntity(XthermaCoordinatorEntity, NumberEntity):
     @property
     def icon(self) -> str | None:
         """Return the icon to use in the frontend, if any."""
-        if self.xt_description.icon_provider:
-            return self.xt_description.icon_provider(self.native_value)
+        if self.entity_description.icon_provider:
+            return self.entity_description.icon_provider(self.native_value)
         return super().icon
 
     async def async_set_native_value(self, value: float) -> None:
         """Set value."""
-        try:
+        with self._force_refresh_on_error():
             native_value = self._align_native_value_type(value)
             await self.coordinator.async_write(self, value=native_value)
             self._attr_native_value = native_value
             self.async_write_ha_state()
-        except HomeAssistantError:
-            self._attr_force_update = True
-            self.async_write_ha_state()
-            self._attr_force_update = False
-            raise
 
-    @property
+    @functools.cached_property
     def native_type_is_int(self) -> bool:
         """Tell if native values are of type int."""
-        if not hasattr(self, "_native_type_is_int"):
-            self._native_type_is_int = isinstance(
-                self.entity_description.native_min_value, int
-            ) and isinstance(self.entity_description.native_step, int)
-        return self._native_type_is_int
+        return isinstance(
+            self.entity_description.native_min_value,
+            int,
+        ) and isinstance(self.entity_description.native_step, int)
 
     def _align_native_value_type(self, value: float | int) -> float | int:
         # enforce internal type, so frontend will show decimal places only

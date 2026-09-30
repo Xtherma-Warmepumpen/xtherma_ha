@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "simple",
+  "skip-changelog": true,
+  "extra-files": [
+    {
+      "type": "json",
+      "path": "custom_components/xtherma_fp/manifest.json",
+      "jsonpath": "$.version"
+    }
+  ]
+}

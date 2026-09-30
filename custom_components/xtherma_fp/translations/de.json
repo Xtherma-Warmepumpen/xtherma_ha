@@ -406,8 +406,14 @@
     "rest_read_only_error": {
       "message": "Der Wert {entity_id} kann nicht über REST-API Verbindnung geändert werden."
     },
+    "modbus_read_only_error": {
+      "message": "Der Wert {entity_id} kann nicht geändert werden: Register ist schreibgeschützt."
+    },
     "modbus_write_busy_error": {
       "message": "Modbus: der Wert {entity_id} wurde zu häufig geändert, bitte warten."
+    },
+    "modbus_write_not_connected_error": {
+      "message": "Modbus: nicht verbunden, der Wert {entity_id} kann nicht geändert werden."
     },
     "modbus_read_busy_error": {
       "message": "Modbus Schnittstelle ist beschäftigt."

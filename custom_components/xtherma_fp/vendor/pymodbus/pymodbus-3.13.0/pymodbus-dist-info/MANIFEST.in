@@ -1,4 +1,0 @@
-include pyproject.toml
-include README.rst
-include CHANGELOG.rst
-include LICENSE

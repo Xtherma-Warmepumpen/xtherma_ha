@@ -7,14 +7,23 @@ on:
   pull_request:
   schedule:
     - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 env:
-  DEFAULT_PYTHON: "3.13"
+  DEFAULT_PYTHON: "3.14"
 
 jobs:
   pre-commit:
     runs-on: "ubuntu-latest"
     name: Pre-commit and pytest
+    timeout-minutes: 30
     steps:
       - name: Check out the repository
         uses: actions/checkout@v7
@@ -29,6 +38,9 @@ jobs:
         run: |
           pip install -r requirements.txt -r dev-requirements.txt
 
+      - name: Install core modbus requirements (from HA core manifest)
+        run: python scripts/sync-modbus-pins.py
+
       - name: Run pre-commit on all files
         run: |
           pre-commit run --all-files --show-diff-on-failure --color=always
@@ -38,12 +50,13 @@ jobs:
 
       - name: Run pytest
         run: |
-          python -m pytest --timeout=10 tests
+          python -m pytest --timeout=10
 
   hacs:
     runs-on: "ubuntu-latest"
     name: HACS
-    if: github.repository == 'Xtherma/xtherma_ha'
+    if: github.repository_owner == 'Xtherma-Warmepumpen'
+    timeout-minutes: 10
     steps:
       - name: Check out the repository
         uses: "actions/checkout@v7"
@@ -57,6 +70,7 @@ jobs:
   hassfest:
     runs-on: "ubuntu-latest"
     name: Hassfest
+    timeout-minutes: 10
     steps:
       - name: Check out the repository
         uses: "actions/checkout@v7"

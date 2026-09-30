@@ -2,9 +2,9 @@
 
 DOMAIN = "xtherma_fp"
 
-# current version of integration
+# current version of the config entry (single source; used by the config
+# flow class body and async_migrate_entry)
 VERSION = 1
-MINOR_VERSION = 0
 
 MANUFACTURER = "Xtherma"
 
@@ -27,9 +27,6 @@ FERNPORTAL_RATE_LIMIT_S = 61
 
 # timeout in seconds before we stop trying to get a response
 FERNPORTAL_TIMEOUT_S = 10
-
-# timeout in seconds before we stop trying to get a response
-MODBUS_TIMEOUT_S = 2
 
 # keys in the response data
 

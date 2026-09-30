@@ -3,7 +3,7 @@
 from unittest.mock import patch
 
 import pytest
-from homeassistant.const import Platform
+from homeassistant.const import STATE_UNKNOWN, Platform
 from pytest_homeassistant_custom_component.common import snapshot_platform
 
 from tests.conftest import MockModbusParam
@@ -29,6 +29,14 @@ SENSOR_ENTITY_ID_MODBUS_V = "sensor.test_entry_xtherma_modbus_config_v_volume_fl
 
 SENSOR_ENTITY_ID_MODBUS_VF = (
     "sensor.test_entry_xtherma_modbus_config_compressor_frequency"
+)
+
+SENSOR_ENTITY_ID_MODBUS_VERSION = (
+    "sensor.test_entry_xtherma_modbus_config_controller_version"
+)
+
+SENSOR_ENTITY_ID_MODBUS_MODE = (
+    "sensor.test_entry_xtherma_modbus_config_current_operating_mode"
 )
 
 
@@ -109,3 +117,44 @@ async def test_get_negative_number_modbus(hass, mock_modbus_tcp_client):
 
     state = hass.states.get(SENSOR_ENTITY_ID_MODBUS_VF)
     assert state.state == "-15"
+
+
+def _version_modbus_data(raw: int) -> MockModbusParam:
+    param = provide_modbus_data()
+    set_modbus_register(param[0], "controller_v", raw)
+    return param[0]
+
+
+@pytest.mark.parametrize(
+    ("mock_modbus_tcp_client", "expected"),
+    [
+        pytest.param(_version_modbus_data(205), "2.05", id="raw-205"),
+        pytest.param(_version_modbus_data(114), "1.14", id="raw-114"),
+    ],
+    indirect=["mock_modbus_tcp_client"],
+)
+# check the minor version is rounded, not truncated (raw 205 used to
+# render "2.04" due to the /100 float representation)
+async def test_version_sensor_rounding(hass, mock_modbus_tcp_client, expected):
+    await init_modbus_integration(hass, mock_modbus_tcp_client)
+
+    state = hass.states.get(SENSOR_ENTITY_ID_MODBUS_VERSION)
+    assert state.state == expected
+
+
+def _out_of_range_mode_modbus_data() -> MockModbusParam:
+    param = provide_modbus_data()
+    # current operating mode has 5 options; the old "% len(options)"
+    # wrap silently fabricated option 4 ("auto") from this value
+    set_modbus_register(param[0], "mode", 99)
+    return param[0]
+
+
+@pytest.mark.parametrize(
+    "mock_modbus_tcp_client", [_out_of_range_mode_modbus_data()], indirect=True
+)
+async def test_enum_sensor_out_of_range(hass, mock_modbus_tcp_client):
+    await init_modbus_integration(hass, mock_modbus_tcp_client)
+
+    state = hass.states.get(SENSOR_ENTITY_ID_MODBUS_MODE)
+    assert state.state == STATE_UNKNOWN

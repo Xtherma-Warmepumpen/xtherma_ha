@@ -3,14 +3,18 @@
 from unittest.mock import patch
 
 import pytest
-from homeassistant.components.select import DOMAIN
-from homeassistant.components.select.const import SERVICE_SELECT_OPTION
-from homeassistant.const import ATTR_ENTITY_ID, ATTR_OPTION, Platform
+from homeassistant.components.select import DOMAIN, SERVICE_SELECT_OPTION
+from homeassistant.const import ATTR_ENTITY_ID, ATTR_OPTION, STATE_UNKNOWN, Platform
 from homeassistant.exceptions import HomeAssistantError
 from pytest_homeassistant_custom_component.common import snapshot_platform
 
 from custom_components.xtherma_fp.xtherma_client_common import XthermaReadOnlyError
-from tests.helpers import provide_modbus_data, provide_rest_data
+from tests.conftest import MockModbusParam
+from tests.helpers import (
+    provide_modbus_data,
+    provide_rest_data,
+    set_modbus_register,
+)
 
 from .conftest import init_integration, init_modbus_integration
 
@@ -71,8 +75,26 @@ async def test_set_select_modbus(hass, mock_modbus_tcp_client):
         blocking=True,
     )
 
-    kwargs = mock_modbus_tcp_client.write_register.call_args.kwargs
+    unit_id, address, value = mock_modbus_tcp_client.write_calls[-1]
     # verify arguments passed to write_register()
-    assert kwargs["address"] == 1
-    assert kwargs["value"] == 0
-    assert kwargs["device_id"] == 1
+    assert address == 1
+    assert value == 0
+    assert unit_id == 1
+
+
+def _out_of_range_option_modbus_data() -> MockModbusParam:
+    param = provide_modbus_data()
+    # operating mode has 5 options; the old "% len(options)" wrap
+    # silently fabricated option 4 ("auto") from this value
+    set_modbus_register(param[0], "002", 99)
+    return param[0]
+
+
+@pytest.mark.parametrize(
+    "mock_modbus_tcp_client", [_out_of_range_option_modbus_data()], indirect=True
+)
+async def test_select_out_of_range_option(hass, mock_modbus_tcp_client):
+    await init_modbus_integration(hass, mock_modbus_tcp_client)
+
+    state = hass.states.get(SELECT_ENTITY_ID_MODBUS_002)
+    assert state.state == STATE_UNKNOWN

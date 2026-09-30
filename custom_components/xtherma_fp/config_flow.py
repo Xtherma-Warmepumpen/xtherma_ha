@@ -3,9 +3,21 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import voluptuous as vol
+
+try:
+    from homeassistant.components.modbus import async_get_temporary_unit
+except ImportError:
+    # Importing the modbus component transitively imports its Modbus
+    # backends (pymodbus / tmodbus), which Home Assistant only installs
+    # when the modbus integration is present. This integration does not
+    # depend on them (it also supports read-only REST), so the import is
+    # guarded: the temporary-unit factory is left as None and re-imported
+    # lazily when a Modbus connection is validated.
+    async_get_temporary_unit = None
+
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
@@ -31,6 +43,7 @@ from homeassistant.helpers.selector import (
     SelectSelectorConfig,
     SelectSelectorMode,
 )
+from modbus_connection import ModbusTcpParams
 
 from .const import (
     CONF_CONNECTION,
@@ -40,20 +53,16 @@ from .const import (
     CONF_SERIAL_NUMBER,
     DOMAIN,
     FERNPORTAL_URL,
+    VERSION,
 )
+from .pytherma.exceptions import XthermaNotConnectedError
 from .xtherma_client_common import (
     XthermaError,
-    XthermaNotConnectedError,
     XthermaRestBusyError,
-)
-from .xtherma_client_modbus import XthermaClientModbus
-from .xtherma_client_rest import (
-    XthermaClientRest,
     XthermaTimeoutError,
 )
-
-if TYPE_CHECKING:
-    from homeassistant.core import HomeAssistant
+from .xtherma_client_modbus import XthermaClientModbus
+from .xtherma_client_rest import XthermaClientRest
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -208,15 +217,32 @@ async def _validate_modbus_tcp(
         errors["base"] = "bad_arguments"
         return errors
 
+    params = ModbusTcpParams(host=host, port=int(port))
+    if async_get_temporary_unit is not None:
+        factory = async_get_temporary_unit
+    else:
+        # the modbus component (and its pymodbus requirement) may
+        # have become available since this module was imported;
+        # import under an alias so the module global is not shadowed
+        try:
+            from homeassistant.components.modbus import (  # noqa: PLC0415
+                async_get_temporary_unit as _temp_unit_factory,
+            )
+        except ImportError:
+            _LOGGER.debug("Modbus component unavailable; cannot validate")
+            errors["base"] = "unknown"
+            return errors
+        factory = _temp_unit_factory
+
     try:
-        client = XthermaClientModbus(
-            host=host,
-            port=int(port),
-            address=int(address),
-        )
-        await client.connect()
-        await client.async_get_data()
-        await client.disconnect()
+        # the temporary unit's connection is closed when the context exits;
+        # a conflicting link setting on a shared endpoint raises
+        # HomeAssistantError (caught below as a general error)
+        async with factory(hass, params, int(address)) as unit:
+            client = XthermaClientModbus(unit)
+            await client.connect()
+            await client.async_get_data()
+            await client.disconnect()
     except XthermaTimeoutError:
         _LOGGER.debug("TimeoutError")
         errors["base"] = "timeout"
@@ -237,7 +263,7 @@ async def _validate_modbus_tcp(
 class XthermaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Process config flow."""
 
-    VERSION = 1
+    VERSION = VERSION
     MINOR_VERSION = 0
 
     @staticmethod
@@ -415,8 +441,6 @@ class XthermaConfigFlow(ConfigFlow, domain=DOMAIN):
 
 class XthermaOptionsFlowHandler(OptionsFlow):
     """Handle an options flow for xtherma_fp."""
-
-    _config_data: dict[str, str]
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
