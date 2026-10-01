@@ -19,6 +19,19 @@ jobs:
     runs-on: "ubuntu-latest"
     timeout-minutes: 10
     steps:
+      - name: Check out main
+        uses: actions/checkout@v7
+
+      - name: Preflight release-please manifest
+        run: |
+          # release-please keys the versions file by package path (v17 core/manifest.ts
+          # parseReleasedVersions). A branch-keyed file (e.g. "branches/main") is parsed
+          # as an unknown path and silently drops the package to its initial 1.0.0.
+          if ! jq -e 'has(".")' .release-please-manifest.json > /dev/null; then
+            echo "::error::.release-please-manifest.json must contain a \".\" path key (the released version), not branch keys"
+            exit 1
+          fi
+
       - name: Run release-please
         id: release_please
         uses: googleapis/release-please-action@v4
