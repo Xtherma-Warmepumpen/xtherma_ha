@@ -3,7 +3,7 @@
   "release-type": "simple",
   "include-component-in-tag": false,
   "skip-changelog": true,
-  "last-release-sha": "76d1eae7cddcbf1790823d024850b16f63894f29",
+  "prerelease": true,
   "packages": {
     ".": {
       "extra-files": [
