@@ -5,15 +5,33 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 5
+    groups:
+      python-minor-patch:
+        patterns: ["*"]
+        exclude-patterns: ["ruff", "pre-commit"]
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+      # Same group name as the pre-commit ecosystem below: one PR bumps
+      # both the ruff/pre-commit pins and the ruff-pre-commit hook rev.
+      tooling:
+        patterns: ["ruff", "pre-commit"]
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 5
+    groups:
+      actions-minor-patch:
+        patterns: ["*"]
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
 
   - package-ecosystem: "pre-commit"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 5
+    groups:
+      tooling:
+        patterns: ["*"]
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
