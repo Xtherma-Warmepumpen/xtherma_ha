@@ -1,9 +1,15 @@
 # Testing Frameworks
-pytest==9.0.3
-pytest-asyncio==1.4.0
-pytest-homeassistant-custom-component==0.13.364
-pytest-timeout==2.4.0
-syrupy==6.0.0
+#
+# pytest-homeassistant-custom-component pins its entire test stack with `==`
+# (pytest, pytest-asyncio, pytest-timeout, syrupy, homeassistant, ...), so
+# restating those versions here only duplicates the harness pin. Worse, a lone
+# bump of one of them is unsatisfiable — dependabot rewrites single lines in
+# requirements files without re-resolving them, so it keeps opening PRs that
+# `pip install -r requirements.txt -r dev-requirements.txt` rejects. They are
+# therefore taken transitively from the harness; run `pip freeze` when the
+# exact verified set must be recorded. Bumping the harness pin must bump
+# `homeassistant` (requirements.txt) in the same change: it is pinned exactly.
+pytest-homeassistant-custom-component==0.13.367
 
 # Code Quality and Utilities
 ruff==0.16.9
