@@ -2,7 +2,9 @@
 # See also CI workflow for testing version matrices
 
 # Home Assistant core dependencies
-homeassistant==2026.9.1
+# Move only together with pytest-homeassistant-custom-component in
+# dev-requirements.txt, which pins homeassistant with `==` as well.
+homeassistant==2026.9.4
 
 # need to specify this or HA won't start up correctly
 bleak==3.0.2
