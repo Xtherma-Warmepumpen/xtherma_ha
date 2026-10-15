@@ -65,11 +65,11 @@ _MODBUS_ROWS: tuple[tuple[str, int, bool], ...] = (
     ("501", 50, True),
     ("522", 51, True),
     # --- network
-    ("808", 60, True),
+    ("815", 60, True),
     ("811", 61, True),
     ("812", 62, True),
     ("813", 63, True),
-    ("815", 64, True),
+    ("808", 65, True),
     # --- surplus
     ("x2400", 70, True),
     ("x2401", 71, True),
