@@ -9,12 +9,12 @@ updates:
       python-minor-patch:
         patterns: ["*"]
         exclude-patterns: ["ruff", "pre-commit"]
-        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+        update-types: ["minor", "patch"]
       # Same group name as the pre-commit ecosystem below: one PR bumps
       # both the ruff/pre-commit pins and the ruff-pre-commit hook rev.
       tooling:
         patterns: ["ruff", "pre-commit"]
-        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -24,7 +24,7 @@ updates:
     groups:
       actions-minor-patch:
         patterns: ["*"]
-        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "pre-commit"
     directory: "/"
@@ -34,4 +34,4 @@ updates:
     groups:
       tooling:
         patterns: ["*"]
-        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+        update-types: ["minor", "patch"]
