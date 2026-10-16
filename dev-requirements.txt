@@ -9,7 +9,7 @@
 # therefore taken transitively from the harness; run `pip freeze` when the
 # exact verified set must be recorded. Bumping the harness pin must bump
 # `homeassistant` (requirements.txt) in the same change: it is pinned exactly.
-pytest-homeassistant-custom-component==0.13.367
+pytest-homeassistant-custom-component==0.13.372
 
 # Code Quality and Utilities
 ruff==0.16.9
