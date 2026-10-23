@@ -8,10 +8,10 @@
   "dependencies": [
     "modbus"
   ],
-  "documentation": "https://github.com/Xtherma/xtherma_ha",
+  "documentation": "https://github.com/Xtherma-Warmepumpen/xtherma_ha",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/Xtherma/xtherma_ha/issues",
+  "issue_tracker": "https://github.com/Xtherma-Warmepumpen/xtherma_ha/issues",
   "quality_scale": "bronze",
   "version": "1.4.0"
 }
