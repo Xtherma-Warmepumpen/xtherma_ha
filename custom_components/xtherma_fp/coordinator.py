@@ -228,5 +228,5 @@ class XthermaDataUpdateCoordinator(DataUpdateCoordinator[dict[str, int | float]]
         value = self.data.get(key)
         if value is None:
             msg = f"Missing data in coordinator key={key}"
-            _LOGGER.error(msg)
+            _LOGGER.warning(msg)
         return value
