@@ -201,7 +201,7 @@ class XthermaDataUpdateCoordinator(DataUpdateCoordinator[dict[str, int | float]]
         return pending.value
 
     async def async_write(self, entity: Entity, value: int | float) -> None:
-        """Add a write request to the queue."""
+        """Write ``value`` for ``entity``, then block its reads during settle."""
         desc = entity.entity_description
         try:
             await self._client.async_put_data(desc=desc, value=value)

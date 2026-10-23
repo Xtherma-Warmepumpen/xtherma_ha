@@ -3,7 +3,7 @@
 import asyncio
 import itertools
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import timedelta
 from typing import Any
 
 import aiohttp
@@ -57,9 +57,6 @@ class XthermaClientRest(XthermaClient):
 
     async def disconnect(self) -> None:
         """Not required for REST."""
-
-    def _now(self) -> int:
-        return int(datetime.now(UTC).timestamp())
 
     async def async_get_data(self) -> dict[str, int | float]:
         """Obtain fresh data."""

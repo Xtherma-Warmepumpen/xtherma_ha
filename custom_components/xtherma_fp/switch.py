@@ -53,13 +53,11 @@ class XthermaSwitchEntity(XthermaCoordinatorEntity, SwitchEntity):
     ) -> None:
         """Class Constructor."""
         super().__init__(coordinator, device_info, description)
-        """
-        Avoid the "unknown" state which will make the frontend render this as two icon
-        buttons in case the coordinator fails to update. Note we also need to
-        explicitly initialize _attr_assumed_state as an instance value, even though
-        the class default is already False. I think this may have to do with the
-        serialization towards the frontend.
-        """
+        # Avoid the "unknown" state which will make the frontend render this
+        # as two icon buttons in case the coordinator fails to update. Note we
+        # also need to explicitly initialize _attr_assumed_state as an instance
+        # value, even though the class default is already False. I think this
+        # may have to do with the serialization towards the frontend.
         self._attr_is_on = False
         self._attr_assumed_state = False
 

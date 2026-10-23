@@ -31,20 +31,14 @@ FERNPORTAL_TIMEOUT_S = 10
 # keys in the response data
 
 # element on top level
-KEY_SERNO = "serial_number"
 KEY_TELEMETRY = "telemetry"
 KEY_SETTINGS = "settings"
 
 # data entry keys in data and db_data
 KEY_ENTRY_KEY = "key"
-KEY_ENTRY_NAME = "name"
 KEY_ENTRY_VALUE = "value"
-KEY_ENTRY_MIN = "min"
-KEY_ENTRY_MAX = "max"
-KEY_ENTRY_MAPPING = "mapping"
-KEY_ENTRY_UNIT = "unit"
-KEY_ENTRY_OUTPUT_FACTOR = "output_factor"
 KEY_ENTRY_INPUT_FACTOR = "input_factor"
+KEY_ENTRY_OUTPUT_FACTOR = "output_factor"
 
 # additional entity state attributes
 EXTRA_STATE_ATTRIBUTE_PARAMETER = "parameter"
