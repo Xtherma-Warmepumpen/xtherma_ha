@@ -72,7 +72,6 @@ _READ_ERROR_RULES: tuple[_ErrorRule, ...] = (
     _ErrorRule(XthermaNotConnectedError, "not_connected_error"),
     _ErrorRule(XthermaRestApiError, "rest_api_error", _error_code),
     _ErrorRule(XthermaModbusError, "modbus_read_error", _error_str),
-    _ErrorRule(XthermaModbusEmptyDataError, "modbus_data_empty_error"),
 )
 _GENERAL_READ_ERROR = _ErrorRule(Exception, "general_error", _error_str)
 
@@ -141,6 +140,21 @@ class XthermaDataUpdateCoordinator(DataUpdateCoordinator[dict[str, int | float]]
                     )
                 else:
                     result[key] = value
+        except XthermaModbusEmptyDataError as err:
+            if not self.data:
+                # Never received usable data: hard-fail so HA retries setup.
+                raise UpdateFailed(
+                    translation_domain=DOMAIN,
+                    translation_key="modbus_data_empty_error",
+                ) from err
+            # Soft failure: a responding device sent a bogus all-zero block.
+            # Keep the last known values; entities render normally instead of
+            # flapping to unavailable on this transient read.
+            _LOGGER.error(  # noqa: TRY400
+                "Ignoring empty device data, keeping last known values: %s",
+                err,
+            )
+            return self.data
         except Exception as err:
             rule = _match_error(err, _READ_ERROR_RULES) or _GENERAL_READ_ERROR
             raise UpdateFailed(

@@ -68,6 +68,8 @@ class XthermaSwitchEntity(XthermaCoordinatorEntity, SwitchEntity):
         """Handle updated data from the coordinator."""
         value = self.coordinator.read_value(self.entity_description.key)
         if value is None:
+            # write state so HA renders unavailable while coordinator fails
+            self.async_write_ha_state()
             return
         self._attr_is_on = value != 0
         self.async_write_ha_state()
