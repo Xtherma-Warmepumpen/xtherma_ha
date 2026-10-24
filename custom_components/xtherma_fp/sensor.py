@@ -72,6 +72,8 @@ class XthermaSensor(XthermaCoordinatorEntity, SensorEntity):
         """Handle updated data from the coordinator."""
         value = self.coordinator.read_value(self.entity_description.key)
         if value is None:
+            # write state so HA renders unavailable while coordinator fails
+            self.async_write_ha_state()
             return
         self._attr_native_value = value
         self.async_write_ha_state()
@@ -91,9 +93,12 @@ class XthermaEnumSensor(XthermaSensor):
     def _handle_coordinator_update(self) -> None:
         options = self._attr_options
         if options is None:
+            self.async_write_ha_state()
             return
         value = self.coordinator.read_value(self.entity_description.key)
         if value is None:
+            # write state so HA renders unavailable while coordinator fails
+            self.async_write_ha_state()
             return
         index = int(value)
         if not 0 <= index < len(options):
@@ -118,6 +123,8 @@ class XthermaVersionSensor(XthermaSensor):
         """Handle updated data from the coordinator."""
         value = self.coordinator.read_value(self.entity_description.key)
         if value is None:
+            # write state so HA renders unavailable while coordinator fails
+            self.async_write_ha_state()
             return
         # note: input factor (assume: /100) has already been applied
         major = int(value)

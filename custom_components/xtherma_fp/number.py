@@ -46,6 +46,8 @@ class XthermaNumberEntity(XthermaCoordinatorEntity, NumberEntity):
         """Handle updated data from the coordinator."""
         value = self.coordinator.read_value(self.entity_description.key)
         if value is None:
+            # write state so HA renders unavailable while coordinator fails
+            self.async_write_ha_state()
             return
         self._attr_native_value = self._align_native_value_type(value)
         self.async_write_ha_state()

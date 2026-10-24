@@ -60,6 +60,8 @@ class XthermaSelectEntity(XthermaCoordinatorEntity, SelectEntity):
         """Handle updated data from the coordinator."""
         value = self.coordinator.read_value(self.entity_description.key)
         if value is None:
+            # write state so HA renders unavailable while coordinator fails
+            self.async_write_ha_state()
             return
         new_index = int(value)
         if not 0 <= new_index < len(self.options):

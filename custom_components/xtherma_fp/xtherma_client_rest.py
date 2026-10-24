@@ -3,7 +3,7 @@
 import asyncio
 import itertools
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import timedelta
 from typing import Any
 
 import aiohttp
@@ -57,9 +57,6 @@ class XthermaClientRest(XthermaClient):
 
     async def disconnect(self) -> None:
         """Not required for REST."""
-
-    def _now(self) -> int:
-        return int(datetime.now(UTC).timestamp())
 
     async def async_get_data(self) -> dict[str, int | float]:
         """Obtain fresh data."""
@@ -127,6 +124,13 @@ class XthermaClientRest(XthermaClient):
         del desc
         _LOGGER.debug("Cannot write values using REST API connection")
         raise XthermaReadOnlyError
+
+    def write_windows(
+        self, desc: EntityDescription
+    ) -> tuple[timedelta, timedelta] | None:
+        """No write windows: the REST transport is read-only."""
+        del desc
+        return None
 
     def get_entity_descriptions(self) -> list[EntityDescription]:
         """Get all entity descriptions."""

@@ -1,11 +1,20 @@
 """Tests for the Xtherma Modbus API."""
 
+import time
 from typing import TYPE_CHECKING, Any
 
 import pytest
 from homeassistant.components.sensor import DOMAIN as DOMAIN_SENSOR
+from homeassistant.components.switch.const import DOMAIN as DOMAIN_SWITCH
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import EVENT_STATE_CHANGED
+from homeassistant.const import (
+    ATTR_ENTITY_ID,
+    EVENT_STATE_CHANGED,
+    SERVICE_TURN_OFF,
+    SERVICE_TURN_ON,
+    STATE_UNAVAILABLE,
+)
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from custom_components.xtherma_fp.const import CONF_DETECT_EMPTY_MODBUS_DATA, DOMAIN
@@ -109,6 +118,8 @@ async def test_modbus_runtime_read_busy(hass, mock_modbus_tcp_client, caplog):
     entity = platform.entities.get(state.entity_id)
     assert entity is not None
     assert entity.state == "water"
+    # ... but the state machine must surface the coordinator failure
+    assert hass.states.get(SENSOR_ENTITY_ID_MODE).state == STATE_UNAVAILABLE
 
     assert any(
         rec.levelname == "ERROR"
@@ -306,3 +317,66 @@ def test_modbus_register_ranges_cannot_be_empty():
         <= REGISTER_RANGES[1].non_empty_reg
         <= REGISTER_RANGES[1].last_reg
     )
+
+
+@pytest.mark.parametrize("mock_modbus_tcp_client", provide_modbus_data(), indirect=True)
+@pytest.mark.asyncio
+async def test_modbus_write_throttled(hass, mock_modbus_tcp_client):
+    """A repeated write inside the register throttle window is rejected."""
+    await init_modbus_integration(hass, mock_modbus_tcp_client)
+
+    await hass.services.async_call(
+        DOMAIN_SWITCH,
+        SERVICE_TURN_ON,
+        {ATTR_ENTITY_ID: SWITCH_ENTITY_ID_MODBUS_450},
+        blocking=True,
+    )
+    assert len(mock_modbus_tcp_client.write_calls) == 1
+
+    # immediate second write: inside the 60 s device throttle window
+    with pytest.raises(HomeAssistantError) as exc_info:
+        await hass.services.async_call(
+            DOMAIN_SWITCH,
+            SERVICE_TURN_OFF,
+            {ATTR_ENTITY_ID: SWITCH_ENTITY_ID_MODBUS_450},
+            blocking=True,
+        )
+    assert exc_info.value.translation_key == "write_throttled_error"
+    assert exc_info.value.translation_placeholders["entity_id"] == (
+        SWITCH_ENTITY_ID_MODBUS_450
+    )
+    # the rejected write must never reach the device
+    assert len(mock_modbus_tcp_client.write_calls) == 1
+
+
+@pytest.mark.parametrize("mock_modbus_tcp_client", provide_modbus_data(), indirect=True)
+@pytest.mark.asyncio
+async def test_modbus_pending_writes_purged(hass, mock_modbus_tcp_client):
+    """Expired pending writes are swept, and no longer block new writes."""
+    await init_modbus_integration(hass, mock_modbus_tcp_client)
+    coordinator = hass.config_entries.async_entries(DOMAIN)[0].runtime_data.coordinator
+
+    await hass.services.async_call(
+        DOMAIN_SWITCH,
+        SERVICE_TURN_ON,
+        {ATTR_ENTITY_ID: SWITCH_ENTITY_ID_MODBUS_450},
+        blocking=True,
+    )
+    pending = coordinator._pending_writes["450"]  # noqa: SLF001
+    assert pending.held_until < pending.throttled_until
+
+    # push both windows into the past, then let a poll sweep the table
+    now = time.monotonic() - 1
+    pending.held_until = now
+    pending.throttled_until = now
+    await coordinator.async_request_refresh()
+    assert coordinator._pending_writes == {}  # noqa: SLF001
+
+    # the expired throttle no longer blocks writes
+    await hass.services.async_call(
+        DOMAIN_SWITCH,
+        SERVICE_TURN_OFF,
+        {ATTR_ENTITY_ID: SWITCH_ENTITY_ID_MODBUS_450},
+        blocking=True,
+    )
+    assert len(mock_modbus_tcp_client.write_calls) == 2

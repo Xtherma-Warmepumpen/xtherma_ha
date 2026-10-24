@@ -41,6 +41,7 @@ Document the major directories and their responsibilities.
 - **Abstraction**: [`xtherma_client_common.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/xtherma_client_common.py) defines the `XthermaClient` ABC; factor scaling lives in the library's [`scaling.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/pytherma/scaling.py) (`apply_factor` + forward/reverse tables).
 - **REST Client**: [`xtherma_client_rest.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/xtherma_client_rest.py) (Read-only via Fernportal).
 - **Modbus Client**: [`xtherma_client_modbus.py`](/workspaces/xtherma_ha/custom_components/xtherma_fp/xtherma_client_modbus.py) — thin wrapper over the library's `XthermaFP` on a pre-bound `modbus_connection.ModbusUnit` handle; owns no transport or lifecycle (D4).
+- **Polling class**: `manifest.json` declares a single `iot_class: local_polling` for the integration. Accurate for the Modbus transport (local 30 s TCP polling); the REST transport is cloud polling in practice (Fernportal portal, ~61 s interval). The single manifest-level value is kept because a config entry uses exactly one transport and `iot_class` is informational (Bronze tier).
 - **Unit acquisition**: `__init__.py` (setup) obtains the unit via `homeassistant.components.modbus.async_get_unit`; `config_flow.py` probes via `async_get_temporary_unit`. Holders of the same `host:port` share one serialized connection; the `modbus` integration owns the link and closes it when the last holding entry unloads.
 - **Boundary**: All direct Modbus I/O lives in the `pytherma` library (`XthermaFP`); the integration's mock boundary is `tests/conftest.py` patching `custom_components.xtherma_fp.async_get_unit` with the library's in-memory `FakeUnit`. All other files consume the client via the `XthermaClient` ABC.
 
@@ -51,7 +52,7 @@ Document the major directories and their responsibilities.
 
 ## Data Flow
 
-`config_flow` → `__init__.async_setup_entry` builds the client → `XthermaDataUpdateCoordinator` polls `client.async_get_data()` → platform entities render `coordinator.read_value(key)`. Writes route via `entity → coordinator.async_write → client.async_put_data`, with a 30s settle time (`_WRITE_SETTLE_TIME_S`) blocking re-reads to prevent stale device data from overwriting fresh writes.
+`config_flow` → `__init__.async_setup_entry` builds the client → `XthermaDataUpdateCoordinator` polls `client.async_get_data()` → platform entities render `coordinator.read_value(key)`. Writes route via `entity → coordinator.async_write → client.async_put_data`, gated by per-binding write windows (D11): during `write_hold_s` (default 30 s) polls substitute the commanded value to prevent stale device data from overwriting fresh writes, and `async_write` rejects a repeated write inside `write_throttle_s` (60 s; 1800 s for slow registers) up front.
 
 ## Known Dependencies
 - **Internal**:

@@ -9,6 +9,7 @@ from .entity_descriptors import (
     MODBUS_DESCRIPTORS,
 )
 from .pytherma import XthermaFP
+from .pytherma.bindings import MODBUS_BINDING_BY_KEY
 from .xtherma_client_common import (
     XthermaClient,
 )
@@ -74,6 +75,18 @@ class XthermaClientModbus(XthermaClient):
     async def async_put_data(self, value: int | float, desc: EntityDescription) -> None:
         """Write data."""
         await self._fp.async_write(desc.key, value)
+
+    def write_windows(
+        self, desc: EntityDescription
+    ) -> tuple[timedelta, timedelta] | None:
+        """Return (read-hold, write-throttle) for the key's register."""
+        binding = MODBUS_BINDING_BY_KEY.get(desc.key)
+        if binding is None:
+            return None
+        return (
+            timedelta(seconds=binding.write_hold_s),
+            timedelta(seconds=binding.write_throttle_s),
+        )
 
     def get_entity_descriptions(self) -> list[EntityDescription]:
         """Get all entity descriptions."""

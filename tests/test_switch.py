@@ -70,7 +70,8 @@ async def test_set_switch_rest(hass, mock_rest_api_client):
 
 @pytest.mark.parametrize("mock_modbus_tcp_client", provide_modbus_data(), indirect=True)
 async def test_set_switch_modbus(hass, mock_modbus_tcp_client):
-    await init_modbus_integration(hass, mock_modbus_tcp_client)
+    entry = await init_modbus_integration(hass, mock_modbus_tcp_client)
+    coordinator = entry.runtime_data.coordinator
 
     await hass.services.async_call(
         DOMAIN,
@@ -85,6 +86,10 @@ async def test_set_switch_modbus(hass, mock_modbus_tcp_client):
     assert address == 40
     assert value == 0
     assert unit_id == 1
+
+    # simulate waiting out the device write-throttle window before
+    # toggling back (throttling itself is pinned in test_pytherma)
+    coordinator._pending_writes.clear()  # noqa: SLF001
 
     await hass.services.async_call(
         DOMAIN,

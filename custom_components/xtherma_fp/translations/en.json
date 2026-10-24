@@ -412,6 +412,9 @@
     "modbus_write_busy_error": {
       "message": "Modbus: wrote {entity_id} too frequently, retry later."
     },
+    "write_throttled_error": {
+      "message": "Writing {entity_id} is throttled by the device; retry in {seconds} s."
+    },
     "modbus_write_not_connected_error": {
       "message": "Modbus: not connected, cannot change {entity_id}."
     },
