@@ -13,5 +13,5 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Xtherma-Warmepumpen/xtherma_ha/issues",
   "quality_scale": "bronze",
-  "version": "1.4.1"
+  "version": "1.5.0"
 }
