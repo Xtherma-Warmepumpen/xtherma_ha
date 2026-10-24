@@ -1,19 +1,27 @@
 version: 2
+
+# One PR bumps the ruff/pre-commit pins (dev-requirements.txt) AND the
+# ruff-pre-commit hook rev (.pre-commit-config.yaml) together. Same-named
+# per-ecosystem `groups` do NOT merge across ecosystems — this top-level
+# key is the supported mechanism (dependabot multi-ecosystem updates).
+multi-ecosystem-groups:
+  tooling:
+    schedule:
+      interval: "monthly"
+
 updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 5
+    # Owned by the 'tooling' multi-ecosystem group below.
+    ignore:
+      - dependency-name: "ruff"
+      - dependency-name: "pre-commit"
     groups:
       python-minor-patch:
         patterns: ["*"]
-        exclude-patterns: ["ruff", "pre-commit"]
-        update-types: ["minor", "patch"]
-      # Same group name as the pre-commit ecosystem below: one PR bumps
-      # both the ruff/pre-commit pins and the ruff-pre-commit hook rev.
-      tooling:
-        patterns: ["ruff", "pre-commit"]
         update-types: ["minor", "patch"]
 
   - package-ecosystem: "github-actions"
@@ -26,12 +34,14 @@ updates:
         patterns: ["*"]
         update-types: ["minor", "patch"]
 
+  # Second entries for the same ecosystem+directory are allowed; they feed
+  # only the multi-ecosystem group (matched by `patterns`), on its schedule.
+  - package-ecosystem: "pip"
+    directory: "/"
+    patterns: ["ruff", "pre-commit"]
+    multi-ecosystem-group: "tooling"
+
   - package-ecosystem: "pre-commit"
     directory: "/"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 5
-    groups:
-      tooling:
-        patterns: ["*"]
-        update-types: ["minor", "patch"]
+    patterns: ["*"]
+    multi-ecosystem-group: "tooling"
