@@ -412,6 +412,9 @@
     "modbus_write_busy_error": {
       "message": "Modbus: der Wert {entity_id} wurde zu häufig geändert, bitte warten."
     },
+    "write_throttled_error": {
+      "message": "Schreiben von {entity_id} ist geräteseitig gedrosselt; erneut in {seconds} s versuchen."
+    },
     "modbus_write_not_connected_error": {
       "message": "Modbus: nicht verbunden, der Wert {entity_id} kann nicht geändert werden."
     },

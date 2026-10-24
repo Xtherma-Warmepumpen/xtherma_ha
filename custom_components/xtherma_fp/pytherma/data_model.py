@@ -49,6 +49,13 @@ class ModbusBinding:
     address: int
     #: whether the address can be written
     writable: bool = False
+    #: seconds during which the device silently discards repeated writes to
+    #: this address (per-register write throttle, see the xtherma_tcp
+    #: register documentation); only meaningful when ``writable``
+    write_throttle_s: int = 60
+    #: seconds after an accepted write during which the read-back is
+    #: considered stale and the caller should hold its commanded value
+    write_hold_s: int = 30
 
 
 @dataclass(frozen=True, slots=True)

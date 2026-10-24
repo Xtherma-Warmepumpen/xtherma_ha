@@ -125,6 +125,13 @@ class XthermaClientRest(XthermaClient):
         _LOGGER.debug("Cannot write values using REST API connection")
         raise XthermaReadOnlyError
 
+    def write_windows(
+        self, desc: EntityDescription
+    ) -> tuple[timedelta, timedelta] | None:
+        """No write windows: the REST transport is read-only."""
+        del desc
+        return None
+
     def get_entity_descriptions(self) -> list[EntityDescription]:
         """Get all entity descriptions."""
         return ENTITY_DESCRIPTIONS

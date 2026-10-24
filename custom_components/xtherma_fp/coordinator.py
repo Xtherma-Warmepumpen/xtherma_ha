@@ -1,9 +1,11 @@
 """DataUpdater for Xtherma Fernportal cloud integration."""
 
 import logging
+import math
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import timedelta
 from typing import TYPE_CHECKING, cast
 
 from homeassistant.core import HomeAssistant
@@ -34,16 +36,24 @@ if TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(__name__)
 
-# Time in seconds the device needs to process a write request.
-# During this time, we block reads which would potentially restore
-# the old value.
-_WRITE_SETTLE_TIME_S = 30
-
 
 @dataclass
 class _PendingWrite:
+    """In-flight bookkeeping for a write accepted by the device.
+
+    Two independent device-behavior windows, per register (see
+    :class:`pytherma.data_model.ModbusBinding`):
+
+    * ``held_until`` — read-back is considered stale until then; polls
+      substitute ``value`` so the old device value does not flicker back.
+    * ``throttled_until`` — the device silently discards repeated writes
+      until then; further writes are rejected up front instead of being
+      sent and lost.
+    """
+
     value: int | float
-    blocked_until: float
+    held_until: float
+    throttled_until: float
 
 
 @dataclass(frozen=True)
@@ -127,6 +137,7 @@ class XthermaDataUpdateCoordinator(DataUpdateCoordinator[dict[str, int | float]]
 
     async def _async_update_data(self) -> dict[str, int | float]:
         result: dict[str, int | float] = {}
+        self._purge_expired_writes()
         try:
             _LOGGER.debug("Coordinator requesting new data")
             client_data = await self._client.async_get_data()
@@ -175,12 +186,40 @@ class XthermaDataUpdateCoordinator(DataUpdateCoordinator[dict[str, int | float]]
         """Get all entity descriptions."""
         return self._client.get_entity_descriptions()
 
-    def _block_for(self, key: str, seconds: int, value: int | float) -> None:
-        """Block reads for a specific register for N seconds."""
-        _LOGGER.debug("Block reads of key %s for %d seconds", key, seconds)
+    def _purge_expired_writes(self) -> None:
+        """Drop pending writes whose hold and throttle windows both passed.
+
+        Entries are otherwise only observed by the keys a poll happens to
+        carry; this keeps the table bounded regardless of payload contents.
+        """
+        if not self._pending_writes:
+            return
+        now = time.monotonic()
+        self._pending_writes = {
+            key: pending
+            for key, pending in self._pending_writes.items()
+            if now < pending.held_until or now < pending.throttled_until
+        }
+
+    def _record_write(
+        self,
+        key: str,
+        value: int | float,
+        hold: timedelta,
+        throttle: timedelta,
+    ) -> None:
+        """Record an accepted write and its two device-behavior windows."""
+        now = time.monotonic()
+        _LOGGER.debug(
+            "Recorded write for key %s (hold %ds, throttle %ds)",
+            key,
+            hold.total_seconds(),
+            throttle.total_seconds(),
+        )
         self._pending_writes[key] = _PendingWrite(
-            blocked_until=time.monotonic() + seconds,
             value=value,
+            held_until=now + hold.total_seconds(),
+            throttled_until=now + throttle.total_seconds(),
         )
 
     def _is_blocked(self, key: str) -> int | float | None:
@@ -193,19 +232,34 @@ class XthermaDataUpdateCoordinator(DataUpdateCoordinator[dict[str, int | float]]
         if pending is None:
             return None
         now = time.monotonic()
-        if now > pending.blocked_until:
-            # block time expired, delete key
-            self._pending_writes.pop(key)
+        if now > pending.held_until:
+            # hold time expired, the read-back is trustworthy again
             return None
-        # key is actually blocked
+        # key is within its read-hold window
         return pending.value
 
     async def async_write(self, entity: Entity, value: int | float) -> None:
-        """Write ``value`` for ``entity``, then block its reads during settle."""
+        """Write ``value`` for ``entity``, then hold its reads.
+
+        A repeated write inside the register's throttle window is rejected
+        up front: the device discards such writes silently, so sending them
+        would leave the UI optimistically showing a value the device never
+        accepted. The throttle state is in-memory only and resets on reload.
+        """
         desc = entity.entity_description
+        now = time.monotonic()
+        pending = self._pending_writes.get(desc.key)
+        if pending is not None and now < pending.throttled_until:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="write_throttled_error",
+                translation_placeholders={
+                    "entity_id": entity.entity_id,
+                    "seconds": str(math.ceil(pending.throttled_until - now)),
+                },
+            )
         try:
             await self._client.async_put_data(desc=desc, value=value)
-            self._block_for(key=desc.key, seconds=_WRITE_SETTLE_TIME_S, value=value)
         except Exception as err:
             rule = _match_error(err, _WRITE_ERROR_RULES)
             if rule is None:
@@ -218,6 +272,10 @@ class XthermaDataUpdateCoordinator(DataUpdateCoordinator[dict[str, int | float]]
                     "entity_id": entity.entity_id,
                 },
             ) from err
+        windows = self._client.write_windows(desc)
+        if windows is not None:
+            hold, throttle = windows
+            self._record_write(desc.key, value, hold, throttle)
 
     def read_value(self, key: str) -> int | float | None:
         """Read a value from us."""

@@ -78,6 +78,19 @@ class XthermaClient(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def write_windows(
+        self, desc: EntityDescription
+    ) -> tuple[timedelta, timedelta] | None:
+        """Return the write timing windows for ``desc``.
+
+        The tuple holds ``(read_hold, write_throttle)``: how long the
+        read-back is considered stale after an accepted write, and how long
+        the device silently discards repeated writes. ``None`` when the
+        transport does not accept writes at all.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def get_entity_descriptions(self) -> list[EntityDescription]:
         """Get all entity descriptions."""
         raise NotImplementedError

@@ -107,3 +107,29 @@ def test_every_quantity_has_a_binding() -> None:
     rest_keys = {b.quantity.key for b in REST_BINDINGS}
     for key, quantity in QUANTITY_BY_KEY.items():
         assert key in MODBUS_BINDING_BY_KEY or key in rest_keys, quantity.name
+
+
+#: xtherma_tcp register documentation: registers 0, 1, 2, 60 and 65 accept
+#: one write per 30 minutes; all other writable registers per minute
+SLOW_WRITE_KEYS = {"001", "002", "003", "815", "808"}
+
+
+def test_write_throttle_table() -> None:
+    for binding in MODBUS_BINDINGS:
+        assert binding.write_hold_s == 30, binding.quantity.key
+        if binding.writable:
+            expected = 1800 if binding.quantity.key in SLOW_WRITE_KEYS else 60
+            assert binding.write_throttle_s == expected, binding.quantity.key
+    # the slow throttle identifies exactly the five documented registers
+    slow = {b.quantity.key for b in MODBUS_BINDINGS if b.write_throttle_s == 1800}
+    assert slow == SLOW_WRITE_KEYS
+
+
+def test_read_only_telemetry_block() -> None:
+    # xtherma_tcp: block 100-199 (Betriebswerte/Sollwerte/Fühlerwerte...)
+    # is read-only; all writable registers live in block 0-99
+    for binding in MODBUS_BINDINGS:
+        if 100 <= binding.address <= 199:
+            assert not binding.writable, binding.quantity.key
+        elif binding.writable:
+            assert binding.address < 100, binding.quantity.key

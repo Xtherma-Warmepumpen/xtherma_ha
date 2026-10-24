@@ -138,8 +138,24 @@ _MODBUS_ROWS: tuple[tuple[str, int, bool], ...] = (
     ("day_backup6_in_hw", 193, False),
 )
 
+#: Per-register write throttle from the xtherma_tcp register documentation:
+#: block 0-99 accepts at most one write per register per minute; registers
+#: 0, 1, 2, 60 and 65 (the keys below) only accept one every 30 minutes.
+_WRITE_THROTTLE_DEFAULT_S = 60
+_WRITE_THROTTLE_SLOW_S = 1800
+_SLOW_WRITE_KEYS = frozenset({"001", "002", "003", "815", "808"})
+
 MODBUS_BINDINGS: tuple[ModbusBinding, ...] = tuple(
-    ModbusBinding(quantity=QUANTITY_BY_KEY[key], address=address, writable=writable)
+    ModbusBinding(
+        quantity=QUANTITY_BY_KEY[key],
+        address=address,
+        writable=writable,
+        write_throttle_s=(
+            _WRITE_THROTTLE_SLOW_S
+            if key in _SLOW_WRITE_KEYS
+            else _WRITE_THROTTLE_DEFAULT_S
+        ),
+    )
     for key, address, writable in _MODBUS_ROWS
 )
 
