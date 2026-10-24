@@ -372,12 +372,17 @@ class XthermaConfigFlow(ConfigFlow, domain=DOMAIN):
                 {CONF_SERIAL_NUMBER: user_input[CONF_SERIAL_NUMBER]}
             )
 
-            self._reconfigure_data.update(user_input)
-            connection_type = user_input[CONF_CONNECTION]
-            if connection_type == CONF_CONNECTION_RESTAPI:
-                return await self.async_step_reconfigure_rest_api()
-            if connection_type == CONF_CONNECTION_MODBUSTCP:
-                return await self.async_step_reconfigure_modbus_tcp()
+            # reconfigure collects the serial too, so it must pass the same
+            # format gate as the user step; the Modbus path never probes it,
+            # so a malformed serial would otherwise persist silently
+            errors |= await _validate_connection(user_input)
+            if not errors:
+                self._reconfigure_data.update(user_input)
+                connection_type = user_input[CONF_CONNECTION]
+                if connection_type == CONF_CONNECTION_RESTAPI:
+                    return await self.async_step_reconfigure_rest_api()
+                if connection_type == CONF_CONNECTION_MODBUSTCP:
+                    return await self.async_step_reconfigure_modbus_tcp()
 
         return self.async_show_form(
             step_id="reconfigure",
