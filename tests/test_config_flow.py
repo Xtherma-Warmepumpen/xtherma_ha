@@ -456,6 +456,29 @@ async def test_step_reconfigure_modbus_errors(hass, mock_rest_api_client):
     assert reconfigure_result["errors"] == errors
 
 
+@pytest.mark.parametrize("mock_rest_api_client", provide_rest_data(), indirect=True)
+async def test_step_reconfigure_bad_serial(hass, mock_rest_api_client):
+    """Test reconfigure rejects a malformed serial number."""
+    entry = await init_integration(hass, mock_rest_api_client)
+    assert entry.state is ConfigEntryState.LOADED
+
+    reconfigure_result = await entry.start_reconfigure_flow(hass)
+    assert reconfigure_result["type"] is FlowResultType.FORM
+    assert reconfigure_result["step_id"] == "reconfigure"
+
+    reconfigure_result = await hass.config_entries.flow.async_configure(
+        reconfigure_result["flow_id"],
+        {
+            CONF_SERIAL_NUMBER: "SerialNumbersMustBeginWithFP",
+            CONF_CONNECTION: CONF_CONNECTION_RESTAPI,
+        },
+    )
+    assert reconfigure_result["type"] is FlowResultType.FORM
+    assert reconfigure_result["step_id"] == "reconfigure"
+    assert reconfigure_result["errors"] == {"base": "bad_arguments"}
+    assert entry.data[CONF_SERIAL_NUMBER] == MOCK_SERIAL_NUMBER
+
+
 @pytest.mark.parametrize(
     ("data", "expected_errors"),
     [
